@@ -1,6 +1,12 @@
 {
   "name": "@rarimo/zk-passport-react",
   "version": "0.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "browser": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "scripts": {
     "build": "yarn build:types && yarn build:cjs && yarn build:esm",
     "build:cjs": "npx swc src -d ./dist/cjs --config-file ./.swcrc -C module.type=commonjs",

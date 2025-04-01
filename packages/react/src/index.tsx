@@ -1,12 +1,12 @@
 import { RequestVerificationLinkOpts, ZkPassport, ZkProof } from '@rarimo/zk-passport'
 import { QRCodeSVG } from 'qrcode.react'
-import { ComponentProps, FC, useEffect, useState } from 'react'
+import { ComponentProps, FC, useEffect, useRef, useState } from 'react'
 
 export enum ProofRequestStatuses {
-  Initial,
-  VerificationRequested,
-  Verified,
-  Error,
+  Initial = 'initial',
+  VerificationRequested = 'verification_requested',
+  Verified = 'verified',
+  Error = 'error',
 }
 
 export interface ZkPassportWrapperProps {
@@ -25,10 +25,12 @@ const ZkPassportWrapper: FC<ZkPassportWrapperProps> = ({
   verificationOptions,
   qrProps,
   onStatusChange,
+  onSuccess,
   onError,
 }) => {
   const [proofRequestUrl, setProofRequestUrl] = useState<string>('')
   const [status, setStatus] = useState<ProofRequestStatuses>(ProofRequestStatuses.Initial)
+  const statusPollTimeout = useRef<number>(-1)
 
   const zkPassport = new ZkPassport(apiUrl)
 
@@ -46,6 +48,40 @@ const ZkPassportWrapper: FC<ZkPassportWrapperProps> = ({
     }
   }
 
+  const loadVerifiedProof = async () => {
+    const proof = await zkPassport.getVerifiedProof(requestId)
+    if (!proof) throw new Error('Proof not found')
+
+    setStatus(ProofRequestStatuses.Verified)
+    onSuccess(proof)
+  }
+
+  const checkVerificationStatus = async () => {
+    try {
+      const verificationStatus = await zkPassport.getVerificationStatus(requestId)
+      switch (verificationStatus) {
+        case 'failed_verification':
+          setStatus(ProofRequestStatuses.Error)
+          onError(new Error('Verification failed'))
+          break
+        case 'uniqueness_check_failed':
+          setStatus(ProofRequestStatuses.Error)
+          onError(new Error('Uniqueness check failed'))
+          break
+        case 'verified':
+          await loadVerifiedProof()
+          break
+        case 'not_verified':
+        default:
+          statusPollTimeout.current = window.setTimeout(checkVerificationStatus, 5000)
+          break
+      }
+    } catch (error) {
+      setStatus(ProofRequestStatuses.Error)
+      onError(error)
+    }
+  }
+
   useEffect(() => {
     const requestVerification = async () => {
       try {
@@ -55,6 +91,7 @@ const ZkPassportWrapper: FC<ZkPassportWrapperProps> = ({
         )
         setProofRequestUrl(proofRequestUrl)
         setStatus(ProofRequestStatuses.VerificationRequested)
+        statusPollTimeout.current = window.setTimeout(checkVerificationStatus, 5000)
       } catch (error) {
         setStatus(ProofRequestStatuses.Error)
         onError(error)

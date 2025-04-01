@@ -1,44 +1,19 @@
 {
   "compilerOptions": {
-    "useDefineForClassFields": true,
+    "lib": ["ESNext", "DOM"],
     "target": "ESNext",
     "module": "ESNext",
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "composite": true,
-    "types": [
-      "node",
-      "vite/client",
-    ],
-    "paths": {
-      "@/*": ["src/*"],
-      "@config": ["src/config.ts"]
-    },
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable",
-      "ScriptHost",
-    ],
+    "moduleDetection": "force",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
     "isolatedModules": true,
-    "noEmit": true
+    "preserveConstEnums": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "tests/**/*.ts",
-    "tests/**/*.tsx",
-    "index.d.ts",
-    "package.json",
-    "src/**/*.json"
-  ]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"],
 }

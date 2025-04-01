@@ -1,5 +1,4 @@
 {
-  "$schema": "https://json.schemastore.org/swcrc",
   "jsc": {
     "parser": {
       "syntax": "typescript",
@@ -15,7 +14,6 @@
       "importMeta": false
     },
     "baseUrl": ".",
-    "transform": null,
     "target": "es2016",
     "loose": false,
     "externalHelpers": false,
