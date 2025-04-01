@@ -1,0 +1,22 @@
+{
+  "name": "zk-passport-example-app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react-swc": "^3.8.1",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.3"
+  },
+  "packageManager": "yarn@4.7.0"
+}
