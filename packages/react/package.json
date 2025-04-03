@@ -1,17 +1,17 @@
 {
   "name": "@rarimo/zk-passport-react",
   "version": "0.0.0",
-  "type": "module",
   "sideEffects": false,
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "browser": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "scripts": {
-    "build": "yarn build:types && yarn build:cjs && yarn build:esm",
+    "build": "yarn clean && yarn build:types && yarn build:cjs && yarn build:esm && node ./postbuild.js",
     "build:cjs": "npx swc src -d ./dist/cjs --config-file ./.swcrc -C module.type=commonjs",
     "build:esm": "npx swc src -d ./dist/esm --config-file ./.swcrc -C module.type=es6 isModule=true",
-    "build:types": "tsc -p tsconfig.build.json --outDir ./dist/types --declaration --emitDeclarationOnly"
+    "build:types": "tsc -p tsconfig.build.json --outDir ./dist/types --declaration --emitDeclarationOnly",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@rarimo/zk-passport": "workspace:^",
@@ -27,6 +27,9 @@
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "packageManager": "yarn@4.7.0"
 }
