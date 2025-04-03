@@ -23,7 +23,7 @@ export enum ProofRequestStatuses {
   Error = 'error',
 }
 
-export interface ZkPassportWrapperProps extends Omit<HTMLAttributes<HTMLAnchorElement>, 'onError'> {
+export interface ZkPassportQrCodeProps extends Omit<HTMLAttributes<HTMLAnchorElement>, 'onError'> {
   /**
    * Verificator service API URL:
    * https://github.com/rarimo/verificator-svc
@@ -62,7 +62,7 @@ export interface ZkPassportWrapperProps extends Omit<HTMLAttributes<HTMLAnchorEl
   onError: (error: Error) => void
 }
 
-const ZkPassportWrapper: FC<ZkPassportWrapperProps> = ({
+const ZkPassportQrCode: FC<ZkPassportQrCodeProps> = ({
   apiUrl,
   requestId,
   verificationOptions,
@@ -158,4 +158,4 @@ const ZkPassportWrapper: FC<ZkPassportWrapperProps> = ({
   )
 }
 
-export default ZkPassportWrapper
+export default ZkPassportQrCode

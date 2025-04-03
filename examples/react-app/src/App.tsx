@@ -1,5 +1,5 @@
 import { RequestVerificationLinkOpts, ZkProof } from '@rarimo/zk-passport'
-import ZkPassportWrapper, { ProofRequestStatuses } from '@rarimo/zk-passport-react'
+import ZkPassportQrCode, { ProofRequestStatuses } from '@rarimo/zk-passport-react'
 import { useState } from 'react'
 
 const requestId = 'account-1'
@@ -44,7 +44,7 @@ export default function App() {
           <pre className='text-xs'>{proof ? JSON.stringify(proof, null, 2) : 'null'}</pre>
         </div>
       </div>
-      <ZkPassportWrapper
+      <ZkPassportQrCode
         apiUrl={apiUrl}
         requestId={requestId}
         verificationOptions={verificationOpts}
