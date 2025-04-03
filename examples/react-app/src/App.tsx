@@ -12,11 +12,11 @@ const verificationOpts: RequestVerificationLinkOpts = {
 }
 
 export default function App() {
-  const [status, setStatus] = useState(ProofRequestStatuses.Initial)
+  const [status, setStatus] = useState(ProofRequestStatuses.RequestInitiated)
   const [proof, setProof] = useState<ZkProof | null>(null)
 
   return (
-    <div className='flex gap-20 justify-center max-w-[760px] mx-auto my-40'>
+    <div className='flex flex-col md:flex-row gap-8 md:gap-20 justify-center md:max-w-[760px] w-full mx-4 md:mx-auto my-6 md:my-24'>
       <div className='flex flex-col'>
         <h1 className='text-xl font-bold'>ZK Passport example</h1>
         <p className='text-neutral-500'>Requesting verification based on the following options:</p>
@@ -39,18 +39,17 @@ export default function App() {
           <span className='text-sm font-medium'>Status:</span>
           <span className='text-sm'>{status}</span>
         </p>
-        {!!proof && (
-          <div className='mt-4'>
-            <p className='text-sm font-medium'>Proof:</p>
-            <pre className='text-xs'>{JSON.stringify(proof, null, 2)}</pre>
-          </div>
-        )}
+        <div className='mt-4'>
+          <p className='text-sm font-medium'>Proof:</p>
+          <pre className='text-xs'>{proof ? JSON.stringify(proof, null, 2) : 'null'}</pre>
+        </div>
       </div>
       <ZkPassportWrapper
         apiUrl={apiUrl}
         requestId={requestId}
         verificationOptions={verificationOpts}
         qrProps={{ size: 256 }}
+        className='max-w-[256px] w-full'
         onStatusChange={status => setStatus(status)}
         onSuccess={proof => setProof(proof)}
         onError={error => console.error(error)}
