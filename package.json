@@ -11,10 +11,11 @@
     "lint:eslint": "eslint ./packages --ignore-path .gitignore",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' '**/*.yml' --ignore-path .gitignore",
-    "version": "yarn workspaces foreach --no-private --all exec yarn version --new-version $npm_package_version",
+    "version": "yarn workspaces foreach --no-private --all exec yarn version $npm_package_version && git add .",
     "publish:stable": "yarn build && yarn workspaces foreach --no-private --all exec yarn npm publish"
   },
   "devDependencies": {
+    "@types/node": "^22.14.0",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
     "chalk": "4.1.2",
