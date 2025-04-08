@@ -1,6 +1,12 @@
 # ZK Passport React
 
-QR code React component for ZK Passport.
+QR code React component for ZK Passport. It allows you to easily integrate ZK Passport into your React applications and renders a QR code for identity verification through RariMe app.
+
+## Features
+
+- Customizable QR code component for scanning with RariMe app
+- Easy integration with [ZK passport core library](https://github.com/rarimo/zk-passport/tree/main/packages/core)
+- Events for status changes and success/error handling
 
 ## Installation
 

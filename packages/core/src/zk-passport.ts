@@ -22,6 +22,8 @@ export class ZkPassport {
    * Request a verification link for a user:
    * https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getVerificationLink
    *
+   * Put this link in a QR code or a deeplink for the RariMe App
+   *
    * @returns RariMe app URL to generate a proof
    */
   async requestVerificationLink(id: string, opts?: RequestVerificationLinkOpts): Promise<string> {

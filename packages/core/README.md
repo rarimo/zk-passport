@@ -1,10 +1,6 @@
 # ZK Passport
 
-ZK Passport is a library for generating and verifying zero-knowledge proofs for identity verification. It allows users to prove their identity without revealing any personal information.
-
-## Core
-
-Core ZK Passport library for the communication with RariMe verificator service.
+ZK Passport is a library for interaction with RariMe app and [RariMe verificator service](https://github.com/rarimo/verificator-svc). It encapsulates the logic of generating and verifying zero-knowledge proofs for identity verification.
 
 ### Installation
 
@@ -16,7 +12,7 @@ yarn add @rarimo/zk-passport
 
 ```ts
 const zkPassport = new ZkPassport()
-const customApi = new ZkPassportVerifier('https://api.example.com')
+const customApi = new ZkPassport('https://api.example.com')
 
 const id = '123'
 const verificationLink = await zkPassport.requestVerificationLink(id, {
