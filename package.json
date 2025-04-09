@@ -1,5 +1,6 @@
 {
   "name": "rarimo-zk-passport-monorepo",
+  "version": "0.0.0",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -9,12 +10,16 @@
     "lint": "yarn lint:eslint && yarn lint:misc --check",
     "lint:eslint": "eslint ./packages --ignore-path .gitignore",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
-    "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' '**/*.yml' --ignore-path .gitignore"
+    "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' '**/*.yml' --ignore-path .gitignore",
+    "version": "yarn workspaces foreach --no-private --all exec yarn version $npm_package_version && git add .",
+    "publish:stable": "yarn build && yarn workspaces foreach --no-private --all exec yarn npm publish"
   },
-  "packageManager": "yarn@4.7.0",
   "devDependencies": {
+    "@types/node": "^22.14.0",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
+    "chalk": "4.1.2",
+    "dotenv": "^16.4.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -25,5 +30,6 @@
     "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
-  }
+  },
+  "packageManager": "yarn@4.7.0"
 }

@@ -5,12 +5,27 @@ import { RequestVerificationLinkOpts, VerificationStatus, ZkProof } from './type
 export class ZkPassport {
   #apiClient: JsonApiClient
 
-  constructor(apiUrl?: string) {
+  constructor(
+    /**
+     * Verificator service API URL:
+     * https://github.com/rarimo/verificator-svc
+     * @default 'https://api.app.rarime.com'
+     */
+    apiUrl?: string,
+  ) {
     this.#apiClient = new JsonApiClient({
       baseUrl: apiUrl || 'https://api.app.rarime.com',
     })
   }
 
+  /**
+   * Request a verification link for a user:
+   * https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getVerificationLink
+   *
+   * Put this link in a QR code or a deeplink for the RariMe App
+   *
+   * @returns RariMe app URL to generate a proof
+   */
   async requestVerificationLink(id: string, opts?: RequestVerificationLinkOpts): Promise<string> {
     const { data } = await this.#apiClient.post<{
       id: string
@@ -40,6 +55,10 @@ export class ZkPassport {
     return proofRequestUrl.href
   }
 
+  /**
+   * Get the verification status of a user:
+   * https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getUserStatus
+   */
   async getVerificationStatus(id: string): Promise<VerificationStatus> {
     const { data } = await this.#apiClient.get<{
       id: string
@@ -50,6 +69,10 @@ export class ZkPassport {
     return data.status
   }
 
+  /**
+   * Get the verified proof for a user:
+   * https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getProof
+   */
   async getVerifiedProof(id: string): Promise<ZkProof | null> {
     try {
       const { data } = await this.#apiClient.get<{
