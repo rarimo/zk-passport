@@ -3,7 +3,8 @@ name: Publish Stable to NPM
 on:
   push:
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+'
+      - 'v?[0-9]+.[0-9]+.[0-9]+'
+      - 'v?[0-9]+.[0-9]+.[0-9]+-[0-9]+'
 
 jobs:
   publish:
@@ -18,6 +19,7 @@ jobs:
           node-version: ${{ matrix.nodejs }}
       - name: Publish
         run: |
+          corepack enable
           yarn install
           yarn publish:stable
         env:
