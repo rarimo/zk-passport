@@ -16,7 +16,7 @@ yarn add @rarimo/zk-passport-react
 
 ## Usage
 
-You can check the full app example in the [example folder](./example).
+You can check the full app example [here](https://github.com/rarimo/zk-passport/tree/main/examples/react-app).
 
 ```tsx
 import ZkPassportQrCode, { ProofRequestStatuses } from '@rarimo/zk-passport-react'
