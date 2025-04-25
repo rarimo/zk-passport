@@ -252,23 +252,23 @@ __metadata:
   linkType: hard
 
 "@rarimo/zk-passport-react@file:../../packages/react::locator=zk-passport-example-app%40workspace%3A.":
-  version: 0.0.0
-  resolution: "@rarimo/zk-passport-react@file:../../packages/react#../../packages/react::hash=7584b1&locator=zk-passport-example-app%40workspace%3A."
+  version: 0.1.1
+  resolution: "@rarimo/zk-passport-react@file:../../packages/react#../../packages/react::hash=f976bf&locator=zk-passport-example-app%40workspace%3A."
   dependencies:
     "@rarimo/zk-passport": "workspace:^"
     qrcode.react: "npm:^4.2.0"
   peerDependencies:
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/6d3791eb53658c9bc0c1be8943b2340865569b855c413845c0746197ab8e8ff79836eefaf3822d17f2fb9bb640c159dc56eee911e0daa1e6ca9fa008d9c65a64
+  checksum: 10c0/eb307ca833379b4005d3087b13921950adacd6cc2e2efd0a9b5f95f1c2bc36b5edcb00da719b2f39c110e96db5a7d25624c2b40d7c625d2f06dd0c9038346e47
   languageName: node
   linkType: hard
 
 "@rarimo/zk-passport@file:../../packages/core::locator=zk-passport-example-app%40workspace%3A.":
-  version: 0.0.0
-  resolution: "@rarimo/zk-passport@file:../../packages/core#../../packages/core::hash=95a2ca&locator=zk-passport-example-app%40workspace%3A."
+  version: 0.1.1
+  resolution: "@rarimo/zk-passport@file:../../packages/core#../../packages/core::hash=abe16a&locator=zk-passport-example-app%40workspace%3A."
   dependencies:
     "@distributedlab/jac": "npm:^1.0.0-rc.17"
-  checksum: 10c0/c558d88214499d3c59b23be9f099a56f2c1967c0bed567a3ca05c304f340efbba5b572049e4a30e0b96c2228e28831bd615537f21ecc23bd4fb582ff9b11052b
+  checksum: 10c0/cfa8e8a708581e4428150af1f6a38b5cb875ea0e67eea241f0ce71b2ab70d35535cf72779b332e4d9687406eb56d12bbcb4b5c0a3b6846d32c68c3008157cee9
   languageName: node
   linkType: hard
 

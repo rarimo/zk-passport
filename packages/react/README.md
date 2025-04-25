@@ -19,7 +19,7 @@ yarn add @rarimo/zk-passport-react
 You can check the full app example [here](https://github.com/rarimo/zk-passport/tree/main/examples/react-app).
 
 ```tsx
-import ZkPassportQrCode, { ProofRequestStatuses } from '@rarimo/zk-passport-react'
+import ZkPassportQrCode from '@rarimo/zk-passport-react'
 
 const requestId = 'account-1'
 const apiUrl = 'https://api.app.rarime.com'

@@ -48,7 +48,7 @@ export class ZkPassport {
       },
     })
 
-    const proofRequestUrl = new URL('rarime://external')
+    const proofRequestUrl = new URL('https://app.rarime.com/external')
     proofRequestUrl.searchParams.append('type', 'proof-request')
     proofRequestUrl.searchParams.append('proof_params_url', data.get_proof_params)
 
