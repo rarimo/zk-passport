@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
+### Changed
+- `core` - Use `app.rarime.com` as QR code URL host
 
 ## [0.1.1] - 2025-04-09
 ### Added
