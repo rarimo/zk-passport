@@ -78,8 +78,10 @@ export interface RequestAdvancedVerificationLinkOpts {
    * @see {@link https://github.com/rarimo/passport-zk-circuits/blob/main/README.md#selector How does the selector work?}
    * @example
    * ```ts
-   * // Reveal citizenship + nullifier, and check identityCounter < 2:
-   * const selector = 0b000100000100001;
+   * // Given a raw binary mask string without the 0b prefix:
+   * const rawSelector = "000100000100001";
+   * // Convert to decimal string for the API:
+   * const selector = parseInt(rawSelector, 2).toString();
    * ```
    */
   selector: string
