@@ -28,7 +28,7 @@ export class ZkPassport {
    * Request a verification link for a user.
    * @see https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getVerificationLink
    */
-  async requestVerificationLink(id: string, opts: RequestVerificationLinkOpts): Promise<string>
+  async requestVerificationLink(id: string, opts?: RequestVerificationLinkOpts): Promise<string>
 
   /**
    * Request an advanced verification link for a user.
