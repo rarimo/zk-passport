@@ -24,14 +24,14 @@ export interface RequestVerificationLinkOpts {
    */
   nationalityCheck?: boolean
   /**
-   * User's sex to be used in the proof params
-   * @example 'M', 'F'
+   * Enable verification of sex param
    */
-  sex?: string
+  sex?: boolean
   /**
-   * User's document expiration date lower bound timestamp
+   * Enable verification of expiration lower bound param. When nothing (or false)
+   * set default value is used, otherwise encoded current UTC timestamp will be stored.
    */
-  expirationLowerBound?: number
+  expirationLowerBound?: boolean
   /**
    * Used to generate different nullifiers by the same identity for different use cases (events).
    *
