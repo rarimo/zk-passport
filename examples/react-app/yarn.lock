@@ -265,10 +265,10 @@ __metadata:
 
 "@rarimo/zk-passport@file:../../packages/core::locator=zk-passport-example-app%40workspace%3A.":
   version: 0.1.2
-  resolution: "@rarimo/zk-passport@file:../../packages/core#../../packages/core::hash=42e1d1&locator=zk-passport-example-app%40workspace%3A."
+  resolution: "@rarimo/zk-passport@file:../../packages/core#../../packages/core::hash=cfc577&locator=zk-passport-example-app%40workspace%3A."
   dependencies:
     "@distributedlab/jac": "npm:^1.0.0-rc.17"
-  checksum: 10c0/ef6ba299a66062894ad4987a62ae95b99eae0e2818ec0b6bbebf8f9dd1a579684ec131ac5e9a022c40c01b43e138eb014258223d94287e777e47d89b19a8e706
+  checksum: 10c0/c3ae2ada0f1d1066ce17efadcda25329608bb1c706fb1d89e1048bbce1d2072ee92c9a252041980b6f4e4660b76e39ed49618d1b17d8952f38d6bd929b535a91
   languageName: node
   linkType: hard
 
