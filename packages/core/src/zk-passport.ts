@@ -76,7 +76,7 @@ export class ZkPassport {
             id,
             type: 'advanced_verification',
             attributes: {
-              event_id: String((opts as RequestAdvancedVerificationLinkOpts)?.eventId),
+              event_id: (opts as RequestAdvancedVerificationLinkOpts)?.eventId,
               selector: (opts as RequestAdvancedVerificationLinkOpts)?.selector,
               citizenship_mask: (opts as RequestAdvancedVerificationLinkOpts)?.citizenshipMask,
               sex: (opts as RequestAdvancedVerificationLinkOpts)?.sex,

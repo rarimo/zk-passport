@@ -1,3 +1,5 @@
+import { COUNTRIES_MASKS } from './constants'
+
 /**
  * Verificator link request attributes:
  * @see[Request verification links for qr-code generation](https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getVerificationLink)
@@ -47,11 +49,11 @@ export interface RequestVerificationLinkOpts {
  */
 export interface RequestAdvancedVerificationLinkOpts {
   /**
-   * Must be decimal and less than 31 bytes.
+   * Must be decimal string and less than 31 bytes.
    * Used to generate different nullifiers by the same identity for different use cases (events).
-   * @example 1
+   * @example "1"
    */
-  eventId: number
+  eventId: string
   /**
    * Bitmask selector controlling which personal data fields are revealed.
    *
@@ -87,8 +89,8 @@ export interface RequestAdvancedVerificationLinkOpts {
   selector: string
 
   /**
-   * Citizenship mask encoded from an `ISO 3166-1 alpha-3 country code` into bytes32 hex.
-   * @example '0x554b52' // Country code 'UKR' → hex bytes32 mask:
+   * Citizenship mask from an `ISO 3166-1 alpha-3 country code`.
+   * @example 'UKR' // Ukraine's country code
    */
   citizenshipMask: string
   /**
@@ -99,7 +101,7 @@ export interface RequestAdvancedVerificationLinkOpts {
    * 'O' // other,
    * '' // unspecified.
    */
-  sex: 'F' | 'M' | 'O' | ''
+  sex: Sex
   /**
    * Lower bound for identity counter used in uniqueness checks.
    * Must be less than the number of registrations for the same passport.
@@ -197,3 +199,6 @@ export interface VerificationLinkResponse {
   callback_url: string
   get_proof_params: string
 }
+
+export type CountryMask = (typeof COUNTRIES_MASKS)[number]
+export type Sex = 'M' | 'F' | 'O' | ''
