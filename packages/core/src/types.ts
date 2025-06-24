@@ -42,6 +42,122 @@ export interface RequestVerificationLinkOpts {
 }
 
 /**
+ * Advanced verificator link request attributes:
+ * https://rarimo.github.io/verificator-svc/#tag/Advanced-verification/operation/getVerificationLinkV2
+ */
+export interface RequestAdvancedVerificationLinkOpts {
+  /**
+   * Used to generate different nullifiers by the same identity for different use cases (events).
+   *
+   * Number or hex number in string format
+   * @example '0x1234567890abcdef', '123'
+   */
+  eventId: string
+  /**
+   * Bitmask selector controlling which personal data fields are revealed
+   * QUERY SELECTOR mapping (bit index: description):
+   * 0: nullifier (reveal)
+   * 1: birth date (reveal)
+   * 2: expiration date (reveal)
+   * 3: name (reveal)
+   * 4: nationality (reveal)
+   * 5: citizenship (reveal)
+   * 6: sex (reveal)
+   * 7: document number (reveal)
+   * 8: timestamp lower bound (range check)
+   * 9: timestamp upper bound (range check)
+   * 10: identity counter lower bound (range check)
+   * 11: identity counter upper bound (range check)
+   * 12: passport expiration lower bound (range check)
+   * 13: passport expiration upper bound (range check)
+   * 14: birth date lower bound (range check)
+   * 15: birth date upper bound (range check)
+   * 16: verify citizenship mask as whitelist (not implemented)
+   * 17: verify citizenship mask as blacklist (not implemented)
+   *
+   * See: [How selector works?](https://github.com/rarimo/passport-zk-circuits/blob/main/README.md#selector)
+   * @example
+   * // You want to reveal *citizenship* and *nullifier* +
+   * // prove that identity counter is *LESS THAN 2*,
+   * // selector bits number 0, 5 and 11 should be active. Thus, selector will be equal:
+   * '0b000100000100001'
+   */
+  selector: string
+  /**
+   * Citizenship mask encoded from an **ISO 3166-1 alpha-3 country code** into bytes32 hex.
+   * @example '0x554b52' // Country code 'UKR' → hex bytes32 mask:
+   */
+  citizenshipMask: string
+  /**
+   * User sex.
+   * @example
+   * 'M' // male,
+   * 'F' // female,
+   * 'O' // other,
+   * '' // unspecified.
+   */
+  sex: 'F' | 'M' | '0' | ''
+  /**
+   * Lower bound for identity counter used in uniqueness checks.
+   * Must be less than the number of registrations for the same passport.
+   * @example 0 // means no minimum restriction
+   */
+  identityCounterLowerBound: number
+  /**
+   * Upper bound for identity counter used in uniqueness checks.
+   * Must be greater than or equal to the number of registrations for the same passport (often 1).
+   * @example 1 // allows up to one registration
+   */
+  identityCounterUpperBound: number
+  /**
+   * Birth date lower bound in hex format (**earliest allowed**).
+   * Format: **yyMMdd**.
+   * Convert ASCII string like '010616' to its hex representation: '0x303130363136' (June 16, 2001).
+   * Lower bound means before this date.
+   * @example '0x303130363136' // before June 16, 2001
+   */
+  birthDateLowerBound: string
+  /**
+   * Birth date upper bound in hex format (latest allowed).
+   * Format:  **yyMMdd**..
+   * Convert ASCII string like '010617' to its hex representation: '0x303130363137' (June 17, 2001).
+   * Upper bound means on or after this date.
+   * @example '0x303130363137' // on or after June 17, 2001
+   */
+  birthDateUpperBound: string
+  /**
+   * Event data in hex format
+   * Arbitrary data tied to the event (e.g., ETH address or hash of an email).
+   * @example '0xabcdef1234...'
+   */
+  eventData: string
+  /**
+   * Lower bound for passport expiration date (public signal index 20).
+   * Encoded as `yyMMdd` hex string. Must be before the actual passport expiration date.
+   * @example '0x20231231' // before actual expiration date
+   */
+  expirationDateLowerBound: string
+  /**
+   * Upper bound for passport expiration date (public signal index 21).
+   * Encoded as `yyMMdd` hex string. Must be on or after the actual passport expiration date.
+   * @example '0x20241231' // on or after actual expiration date
+   */
+  expirationDateUpperBound: string
+  /**
+   * Timestamp lower bound, as UNIX epoch seconds (integer <int64>).
+   * Must be before the passport registration time.
+   * @example 1620000000 // before registration timestamp
+   */
+  timestampLowerBound: number
+  /**
+   * Timestamp upper bound, as UNIX epoch seconds (integer <int64>).
+   * Must be on or after the passport registration time.
+   * @example 1620003600 // on or after registration timestamp
+   */
+  timestampUpperBound: number
+}
+
+/**
  * User verification status
  * https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getUserStatus
  *
