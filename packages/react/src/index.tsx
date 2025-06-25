@@ -121,11 +121,10 @@ const ZkPassportQrCode: FC<ZkPassportQrCodeProps> = ({
   useEffect(() => {
     const requestVerification = async () => {
       try {
-        const proofRequestUrl = await getVerificationLink(
-          zkPassport,
-          requestId,
-          verificationOptions,
-        )
+        const proofRequestUrl =
+          'selector' in verificationOptions
+            ? await zkPassport.requestVerificationLink(requestId, verificationOptions)
+            : await zkPassport.requestVerificationLink(requestId, verificationOptions)
 
         setProofRequestUrl(proofRequestUrl)
         setStatus(ProofRequestStatuses.VerificationRequested)
@@ -164,14 +163,5 @@ const ZkPassportQrCode: FC<ZkPassportQrCodeProps> = ({
     </a>
   )
 }
-
-export const getVerificationLink = (
-  zkPassport: ZkPassport,
-  id: string,
-  opts: RequestVerificationLinkOpts | CustomProofParams,
-) =>
-  'selector' in opts
-    ? zkPassport.requestVerificationLink(id, opts)
-    : zkPassport.requestVerificationLink(id, opts)
 
 export default ZkPassportQrCode

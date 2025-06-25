@@ -1,4 +1,4 @@
-import { COUNTRIES_MASKS } from './constants'
+import { PASSPORT_CITIZENSHIP_CODES } from './constants'
 
 /**
  * Verificator link request attributes:
@@ -80,9 +80,7 @@ export interface CustomProofParams {
    * @see {@link https://github.com/rarimo/passport-zk-circuits/blob/main/README.md#selector How does the selector work?}
    * @example
    * ```ts
-   * // Given a raw binary mask string without the 0b prefix:
    * const rawSelector = "000100000100001";
-   * // Convert to decimal string for the API:
    * const selector = parseInt(rawSelector, 2).toString();
    * ```
    */
@@ -90,76 +88,76 @@ export interface CustomProofParams {
 
   /**
    * Citizenship mask from an `ISO 3166-1 alpha-3 country code`.
-   * @example 'UKR' // Ukraine's country code
+   * @example "UKR" // Ukraine's country code
    */
   citizenshipMask: string
   /**
    * User sex.
    * @example
-   * 'M' // male,
-   * 'F' // female,
-   * 'O' // other,
-   * '' // unspecified.
+   * "M" // male,
+   * "F" // female,
+   * "O" // other,
+   * "" // unspecified
    */
   sex: Sex
   /**
    * Lower bound for identity counter used in uniqueness checks.
    * Must be less than the number of registrations for the same passport.
-   * @example 0 // means no minimum restriction
+   * @example "0" // means no minimum restriction
    */
-  identityCounterLowerBound: number
+  identityCounterLowerBound: string
   /**
    * Upper bound for identity counter used in uniqueness checks.
-   * Must be greater than or equal to the number of registrations for the same passport (often 1).
-   * @example 1 // allows up to one registration
+   * Must be greater than or equal to the number of registrations for the same passport (often "1").
+   * @example "1" // allows up to one registration
    */
-  identityCounterUpperBound: number
+  identityCounterUpperBound: string
   /**
    * Birth date lower bound in hex format (**earliest allowed**).
-   * Format: **yyMMdd**.
-   * Convert ASCII string like `010616` to its hex representation: `0x303130363136` (June 16, 2001).
-   * Lower bound means before this date.
-   * @example '0x303130363136' // before June 16, 2001
+   * Format: `yyMMdd`.
+   * Convert ASCII string like `010616` to hex: `0x303130363136`
+   * @example "0x303130363136" // before June 16, 2001
    */
   birthDateLowerBound: string
   /**
-   * Birth date upper bound in hex format (latest allowed).
-   * Format:  `yyMMdd`..
-   * Convert ASCII string like `010617` to its hex representation: `0x303130363137` (June 17, 2001).
-   * Upper bound means on or after this date.
-   * @example '0x303130363137' // on or after June 17, 2001
+   * Birth date upper bound in hex format (**latest allowed**).
+   * Format: `yyMMdd`.
+   * Convert ASCII string like `010617` to hex: `0x303130363137`
+   * @example "0x303130363137" // on or after June 17, 2001
    */
   birthDateUpperBound: string
   /**
-   * Event data in hex format
+   * Event data in hex format.
    * Arbitrary data tied to the event (e.g., ETH address or hash of an email).
-   * @example '0xabcdef1234...'
+   * @example "0xabcdef1234"
    */
   eventData: string
   /**
    * Lower bound for passport expiration date.
-   * Encoded as `yyMMdd` hex string. Must be before the actual passport expiration date.
-   * @example '0x20231231' // before actual expiration date
+   * Encoded as `yyMMdd` hex string.
+   * Must be before the actual passport expiration date.
+   * @example "0x20231231" // before actual expiration date
    */
   expirationDateLowerBound: string
   /**
    * Upper bound for passport expiration date.
-   * Encoded as `yyMMdd` hex string. Must be on or after the actual passport expiration date.
-   * @example '0x20241231' // on or after actual expiration date
+   * Encoded as `yyMMdd` hex string.
+   * Must be on or after the actual passport expiration date.
+   * @example "0x20241231" // on or after actual expiration date
    */
   expirationDateUpperBound: string
   /**
-   * Timestamp lower bound, as UNIX epoch seconds.
+   * Timestamp lower bound, as UNIX epoch seconds (stringified).
    * Must be before the passport registration time.
-   * @example 1620000000 // before registration timestamp
+   * @example "1620000000" // before registration timestamp
    */
-  timestampLowerBound: number
+  timestampLowerBound: string
   /**
-   * Timestamp upper bound, as UNIX epoch seconds.
+   * Timestamp upper bound, as UNIX epoch seconds (stringified).
    * Must be on or after the passport registration time.
-   * @example 1620003600 // on or after registration timestamp
+   * @example "1620003600" // on or after registration timestamp
    */
-  timestampUpperBound: number
+  timestampUpperBound: string
 }
 
 /**
@@ -200,5 +198,5 @@ export interface VerificationLinkResponse {
   get_proof_params: string
 }
 
-export type CountryMask = (typeof COUNTRIES_MASKS)[number]
+export type CountryCode = (typeof PASSPORT_CITIZENSHIP_CODES)[number]
 export type Sex = 'M' | 'F' | 'O' | ''

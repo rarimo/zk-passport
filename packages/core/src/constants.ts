@@ -1,8 +1,9 @@
 export const BINARY_REG_EX = /^0b[01]+$/
 export const DECIMAL_REG_EX = /^[0-9]+$/
+export const HEX_REG_EX = /^0x[\da-fA-F]+$/
 export const PASSPORT_DATE_REG_EX = /^\d{6}$/
 
-export const COUNTRIES_MASKS = [
+export const PASSPORT_CITIZENSHIP_CODES = [
   'AFG',
   'ALA',
   'ALB',
@@ -86,7 +87,7 @@ export const COUNTRIES_MASKS = [
   'GAB',
   'GMB',
   'GEO',
-  'D<<',
+  'D<<', // MRZ code for Germany ('D') with filler ('<<')
   'GHA',
   'GIB',
   'GRC',

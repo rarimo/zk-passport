@@ -40,31 +40,46 @@ export class ZkPassport {
     id: string,
     opts?: RequestVerificationLinkOpts | CustomProofParams,
   ): Promise<string> {
-    // OVERLOAD I: basic user verification
-    if (!opts || !('selector' in (opts as CustomProofParams))) {
-      const { data } = await this.#apiClient.post<VerificationLinkResponse>(
-        '/integrations/verificator-svc/private/verification-link',
-        {
-          body: {
-            data: {
-              id,
-              type: 'user',
-              attributes: {
-                age_lower_bound: (opts as RequestVerificationLinkOpts)?.ageLowerBound,
-                uniqueness: (opts as RequestVerificationLinkOpts)?.uniqueness,
-                nationality: (opts as RequestVerificationLinkOpts)?.nationality,
-                nationality_check: (opts as RequestVerificationLinkOpts)?.nationalityCheck,
-                event_id: (opts as RequestVerificationLinkOpts)?.eventId,
-              },
+    const proofParamsUrl =
+      opts && 'selector' in opts
+        ? await this._getCustomProofParamsUrl(id, opts)
+        : await this._getVerificationLinkProofParamsUrl(id, opts)
+
+    const proofRequestUrl = new URL('https://app.rarime.com/external')
+    proofRequestUrl.searchParams.append('type', 'proof-request')
+    proofRequestUrl.searchParams.append('proof_params_url', proofParamsUrl)
+    return proofRequestUrl.href
+  }
+
+  private async _getVerificationLinkProofParamsUrl(
+    id: string,
+    opts?: RequestVerificationLinkOpts,
+  ): Promise<string> {
+    const { data } = await this.#apiClient.post<VerificationLinkResponse>(
+      '/integrations/verificator-svc/private/verification-link',
+      {
+        body: {
+          data: {
+            id,
+            type: 'user',
+            attributes: {
+              age_lower_bound: opts?.ageLowerBound,
+              uniqueness: opts?.uniqueness,
+              nationality: opts?.nationality,
+              nationality_check: opts?.nationalityCheck,
+              event_id: opts?.eventId,
             },
           },
         },
-      )
+      },
+    )
 
-      return this._buildProofRequestUrl(data.get_proof_params)
-    }
+    return data.get_proof_params
+  }
 
-    // OVERLOAD II: advanced verification
+  private async _getCustomProofParamsUrl(id: string, opts: CustomProofParams): Promise<string> {
+    const safeNum = (v?: string) => (v ? Number(v) : undefined)
+
     const { data } = await this.#apiClient.post<VerificationLinkResponse>(
       '/integrations/verificator-svc/v2/private/verification-link',
       {
@@ -73,34 +88,26 @@ export class ZkPassport {
             id,
             type: 'advanced_verification',
             attributes: {
-              event_id: (opts as CustomProofParams)?.eventId,
-              selector: (opts as CustomProofParams)?.selector,
-              citizenship_mask: (opts as CustomProofParams)?.citizenshipMask,
-              sex: (opts as CustomProofParams)?.sex,
-              identity_counter_lower_bound: (opts as CustomProofParams)?.identityCounterLowerBound,
-              identity_counter_upper_bound: (opts as CustomProofParams)?.identityCounterUpperBound,
-              birth_date_lower_bound: (opts as CustomProofParams)?.birthDateLowerBound,
-              birth_date_upper_bound: (opts as CustomProofParams)?.birthDateUpperBound,
-              event_data: (opts as CustomProofParams)?.eventData,
-              expiration_date_lower_bound: (opts as CustomProofParams)?.expirationDateLowerBound,
-              expiration_date_upper_bound: (opts as CustomProofParams)?.expirationDateUpperBound,
+              timestamp_lower_bound: safeNum(opts.timestampLowerBound),
+              timestamp_upper_bound: safeNum(opts.timestampUpperBound),
+              event_id: opts.eventId,
+              selector: opts.selector,
+              citizenship_mask: opts.citizenshipMask,
+              sex: opts.sex,
+              identity_counter_lower_bound: safeNum(opts.identityCounterLowerBound),
+              identity_counter_upper_bound: safeNum(opts.identityCounterUpperBound),
+              birth_date_lower_bound: opts.birthDateLowerBound,
+              birth_date_upper_bound: opts.birthDateUpperBound,
+              event_data: opts.eventData,
+              expiration_date_lower_bound: opts.expirationDateLowerBound,
+              expiration_date_upper_bound: opts.expirationDateUpperBound,
             },
           },
         },
       },
     )
 
-    return this._buildProofRequestUrl(data.get_proof_params)
-  }
-
-  /**
-   * Builds the proof request URL for RariMe app.
-   */
-  private _buildProofRequestUrl(proofParamsUrl: string): string {
-    const proofRequestUrl = new URL('https://app.rarime.com/external')
-    proofRequestUrl.searchParams.append('type', 'proof-request')
-    proofRequestUrl.searchParams.append('proof_params_url', proofParamsUrl)
-    return proofRequestUrl.href
+    return data.get_proof_params
   }
 
   /**
