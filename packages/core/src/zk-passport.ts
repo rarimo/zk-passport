@@ -1,7 +1,7 @@
 import { JsonApiClient, NotFoundError } from '@distributedlab/jac'
 
 import {
-  RequestAdvancedVerificationLinkOpts,
+  CustomProofParams,
   RequestVerificationLinkOpts,
   VerificationLinkResponse,
   VerificationStatus,
@@ -34,17 +34,14 @@ export class ZkPassport {
    * Request an advanced verification link for a user.
    * @see https://rarimo.github.io/verificator-svc/#tag/Advanced-verification/operation/getVerificationLinkV2
    */
-  async requestVerificationLink(
-    id: string,
-    opts: RequestAdvancedVerificationLinkOpts,
-  ): Promise<string>
+  async requestVerificationLink(id: string, opts: CustomProofParams): Promise<string>
 
   async requestVerificationLink(
     id: string,
-    opts?: RequestVerificationLinkOpts | RequestAdvancedVerificationLinkOpts,
+    opts?: RequestVerificationLinkOpts | CustomProofParams,
   ): Promise<string> {
     // OVERLOAD I: basic user verification
-    if (!opts || !('selector' in (opts as RequestAdvancedVerificationLinkOpts))) {
+    if (!opts || !('selector' in (opts as CustomProofParams))) {
       const { data } = await this.#apiClient.post<VerificationLinkResponse>(
         '/integrations/verificator-svc/private/verification-link',
         {
@@ -76,23 +73,17 @@ export class ZkPassport {
             id,
             type: 'advanced_verification',
             attributes: {
-              event_id: (opts as RequestAdvancedVerificationLinkOpts)?.eventId,
-              selector: (opts as RequestAdvancedVerificationLinkOpts)?.selector,
-              citizenship_mask: (opts as RequestAdvancedVerificationLinkOpts)?.citizenshipMask,
-              sex: (opts as RequestAdvancedVerificationLinkOpts)?.sex,
-              identity_counter_lower_bound: (opts as RequestAdvancedVerificationLinkOpts)
-                ?.identityCounterLowerBound,
-              identity_counter_upper_bound: (opts as RequestAdvancedVerificationLinkOpts)
-                ?.identityCounterUpperBound,
-              birth_date_lower_bound: (opts as RequestAdvancedVerificationLinkOpts)
-                ?.birthDateLowerBound,
-              birth_date_upper_bound: (opts as RequestAdvancedVerificationLinkOpts)
-                ?.birthDateUpperBound,
-              event_data: (opts as RequestAdvancedVerificationLinkOpts)?.eventData,
-              expiration_date_lower_bound: (opts as RequestAdvancedVerificationLinkOpts)
-                ?.expirationDateLowerBound,
-              expiration_date_upper_bound: (opts as RequestAdvancedVerificationLinkOpts)
-                ?.expirationDateUpperBound,
+              event_id: (opts as CustomProofParams)?.eventId,
+              selector: (opts as CustomProofParams)?.selector,
+              citizenship_mask: (opts as CustomProofParams)?.citizenshipMask,
+              sex: (opts as CustomProofParams)?.sex,
+              identity_counter_lower_bound: (opts as CustomProofParams)?.identityCounterLowerBound,
+              identity_counter_upper_bound: (opts as CustomProofParams)?.identityCounterUpperBound,
+              birth_date_lower_bound: (opts as CustomProofParams)?.birthDateLowerBound,
+              birth_date_upper_bound: (opts as CustomProofParams)?.birthDateUpperBound,
+              event_data: (opts as CustomProofParams)?.eventData,
+              expiration_date_lower_bound: (opts as CustomProofParams)?.expirationDateLowerBound,
+              expiration_date_upper_bound: (opts as CustomProofParams)?.expirationDateUpperBound,
             },
           },
         },

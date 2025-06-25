@@ -1,5 +1,5 @@
 import { BINARY_REG_EX, DECIMAL_REG_EX, PASSPORT_DATE_REG_EX } from './constants'
-import { CountryMask, RequestAdvancedVerificationLinkOpts, Sex } from './types'
+import { CountryMask, CustomProofParams, Sex } from './types'
 import { ASCIItoHex } from './utils'
 
 /**
@@ -9,7 +9,7 @@ import { ASCIItoHex } from './utils'
  * @see https://rarimo.github.io/verificator-svc/#tag/Advanced-verification/operation/getVerificationLinkV2
  */
 export class CustomProofParamsBuilder {
-  private opts: Partial<RequestAdvancedVerificationLinkOpts> = {}
+  private opts: Partial<CustomProofParams> = {}
 
   /**
    * Set the selector bitmask for the proof.
@@ -97,6 +97,9 @@ export class CustomProofParamsBuilder {
    * Validates each bound as exactly 6 digits and converts to bytes32 hex.
    * @param bounds.lower Lower bound as 6-digit 'yyMMdd'
    * @param bounds.upper Upper bound as 6-digit 'yyMMdd'
+   * @example
+   * '010616' // 16 June of 20001
+   * '000000' // Used for zero date
    */
   withBirthDateBounds(bounds: { lower: string; upper: string }): this {
     const { lower, upper } = bounds
@@ -124,6 +127,9 @@ export class CustomProofParamsBuilder {
    * Validates each bound as exactly 6 digits and converts to bytes32 hex.
    * @param bounds.lower Lower bound as 6-digit `yyMMdd`
    * @param bounds.upper Upper bound as 6-digit `yyMMdd`
+   * @example
+   * '010616' // 16 June of 20001
+   * '000000' // Used for zero date
    */
   withExpirationDateBounds(bounds: { lower: string; upper: string }): this {
     const { lower, upper } = bounds
@@ -169,8 +175,8 @@ export class CustomProofParamsBuilder {
    * Finalize builder, returning fully populated options.
    * Throws if any required field is missing.
    */
-  build(): RequestAdvancedVerificationLinkOpts {
-    const required: (keyof RequestAdvancedVerificationLinkOpts)[] = [
+  build(): CustomProofParams {
+    const required: (keyof CustomProofParams)[] = [
       'selector',
       'eventId',
       'citizenshipMask',
@@ -190,6 +196,6 @@ export class CustomProofParamsBuilder {
         throw new Error(`Missing parameter: ${key}`)
       }
     }
-    return this.opts as RequestAdvancedVerificationLinkOpts
+    return this.opts as CustomProofParams
   }
 }

@@ -47,7 +47,7 @@ export interface RequestVerificationLinkOpts {
  * Advanced verificator link request attributes:
  * @see[Request verification links with custom proof parameters](https://rarimo.github.io/verificator-svc/#tag/Advanced-verification/operation/getVerificationLinkV2)
  */
-export interface RequestAdvancedVerificationLinkOpts {
+export interface CustomProofParams {
   /**
    * Must be decimal string and less than 31 bytes.
    * Used to generate different nullifiers by the same identity for different use cases (events).
