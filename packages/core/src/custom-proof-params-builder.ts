@@ -5,7 +5,7 @@ import {
   MAX_EVENT_ID_DIGITS,
   PASSPORT_DATE_REG_EX,
 } from './constants'
-import { CountryCode, CustomProofParams, Sex } from './types'
+import { CustomProofParams, PassportCitizenshipCode, Sex } from './types'
 import { asciiToHex } from './utils'
 
 /**
@@ -66,7 +66,7 @@ export class CustomProofParamsBuilder {
    * Validates that `mask` is one of the allowed codes in `COUNTRIES`.
    * @example "UKR"
    */
-  withCitizenshipMask(mask: CountryCode): this {
+  withCitizenshipMask(mask: PassportCitizenshipCode): this {
     this.opts.citizenshipMask = mask
     return this
   }
@@ -134,7 +134,7 @@ export class CustomProofParamsBuilder {
   /**
    * Event data in hex format
    * Arbitrary data tied to the event (e.g., ETH address or hash of an email).
-   * @example '0xabcdef1234...'
+   * @example '0xabcdef1234'
    */
   withEventData(hex: `0x${string}`): this {
     this.opts.eventData = hex

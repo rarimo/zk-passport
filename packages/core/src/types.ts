@@ -88,7 +88,13 @@ export interface CustomProofParams {
 
   /**
    * Citizenship mask from an `ISO 3166-1 alpha-3 country code`.
-   * @example "UKR" // Ukraine's country code
+   * Most countries follow the standard 3-letter format like "UKR", "USA", "FRA", etc.
+   *
+   * ⚠️ Exception: `"D<<"` is used for Germany in some passport formats
+   * — it's a placeholder with a 1-letter country code (`D`) followed by filler characters.
+   *
+   * @example "UKR" // Ukraine
+   * @example "D<<" // Germany (placeholder format)
    */
   citizenshipMask: string
   /**
@@ -198,5 +204,5 @@ export interface VerificationLinkResponse {
   get_proof_params: string
 }
 
-export type CountryCode = (typeof PASSPORT_CITIZENSHIP_CODES)[number]
+export type PassportCitizenshipCode = (typeof PASSPORT_CITIZENSHIP_CODES)[number]
 export type Sex = 'M' | 'F' | 'O' | ''
