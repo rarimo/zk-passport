@@ -20,7 +20,7 @@ export class CustomProofParamsBuilder {
    * Set the selector bitmask for the proof.
    * Accepts binary ('0b...'), decimal ('123'), or hex ('0x...') literals.
    * Internally stores as decimal string.
-   *  * @example
+   * @example
    * builder.withSelector('0b1010') // binary → stored as '10'
    * builder.withSelector('42')     // decimal → stored as '42'
    * builder.withSelector('0x2A')   // hex → stored as '42'
