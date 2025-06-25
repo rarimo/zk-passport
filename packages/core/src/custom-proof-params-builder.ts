@@ -1,4 +1,10 @@
-import { BINARY_REG_EX, DECIMAL_REG_EX, HEX_REG_EX, PASSPORT_DATE_REG_EX } from './constants'
+import {
+  BINARY_REG_EX,
+  DECIMAL_REG_EX,
+  HEX_REG_EX,
+  MAX_EVENT_ID_DIGITS,
+  PASSPORT_DATE_REG_EX,
+} from './constants'
 import { CountryCode, CustomProofParams, Sex } from './types'
 import { asciiToHex } from './utils'
 
@@ -14,6 +20,10 @@ export class CustomProofParamsBuilder {
    * Set the selector bitmask for the proof.
    * Accepts binary ('0b...'), decimal ('123'), or hex ('0x...') literals.
    * Internally stores as decimal string.
+   *  * @example
+   * builder.withSelector('0b1010') // binary → stored as '10'
+   * builder.withSelector('42')     // decimal → stored as '42'
+   * builder.withSelector('0x2A')   // hex → stored as '42'
    */
   withSelector(selector: string): this {
     if (BINARY_REG_EX.test(selector)) {
@@ -36,14 +46,16 @@ export class CustomProofParamsBuilder {
 
   /**
    * Must be a non-negative integer and no more than 31 decimal digits.
+   * @example "10" // Decimal number wrapped in a string
+   * @example "0" // Valid minimum value
    */
   withEventId(eventId: string): this {
     if (!DECIMAL_REG_EX.test(eventId)) {
       throw new Error(`eventId must be a non-negative decimal string`)
     }
 
-    if (eventId.length > 31) {
-      throw new Error(`eventId must be ≤ 31 digits; got ${eventId.length}`)
+    if (eventId.length > MAX_EVENT_ID_DIGITS) {
+      throw new Error(`eventId must be ≤ ${MAX_EVENT_ID_DIGITS} digits; got ${eventId.length}`)
     }
     this.opts.eventId = eventId
     return this
@@ -52,7 +64,7 @@ export class CustomProofParamsBuilder {
   /**
    * Set the ISO 3166-1 alpha-3 country code for citizenship.
    * Validates that `mask` is one of the allowed codes in `COUNTRIES`.
-   * @example 'UKR'
+   * @example "UKR"
    */
   withCitizenshipMask(mask: CountryCode): this {
     this.opts.citizenshipMask = mask
@@ -62,10 +74,10 @@ export class CustomProofParamsBuilder {
   /**
    * User sex: `M`, `F`, `O`, or `''`.
    * @example
-   * 'M' // male,
-   * 'F' // female,
-   * 'O' // other,
-   * '' // unspecified.
+   * "M" // male,
+   * "F" // female,
+   * "O" // other,
+   * "" // unspecified.
    */
   withSex(sex: Sex): this {
     this.opts.sex = sex
