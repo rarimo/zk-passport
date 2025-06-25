@@ -1,4 +1,9 @@
-import { RequestVerificationLinkOpts, ZkPassport, ZkProof } from '@rarimo/zk-passport'
+import {
+  CustomProofParams,
+  RequestVerificationLinkOpts,
+  ZkPassport,
+  ZkProof,
+} from '@rarimo/zk-passport'
 import { QRCodeSVG } from 'qrcode.react'
 import { ComponentProps, FC, HTMLAttributes, useEffect, useRef, useState } from 'react'
 
@@ -37,7 +42,7 @@ export interface ZkPassportQrCodeProps extends Omit<HTMLAttributes<HTMLAnchorEle
   /**
    * Options for the proof request
    */
-  verificationOptions: RequestVerificationLinkOpts
+  verificationOptions: RequestVerificationLinkOpts | CustomProofParams
   /**
    * Polling interval for checking the proof status
    * @default 5000
@@ -116,10 +121,11 @@ const ZkPassportQrCode: FC<ZkPassportQrCodeProps> = ({
   useEffect(() => {
     const requestVerification = async () => {
       try {
-        const proofRequestUrl = await zkPassport.requestVerificationLink(
-          requestId,
-          verificationOptions,
-        )
+        const proofRequestUrl =
+          'selector' in verificationOptions
+            ? await zkPassport.requestVerificationLink(requestId, verificationOptions)
+            : await zkPassport.requestVerificationLink(requestId, verificationOptions)
+
         setProofRequestUrl(proofRequestUrl)
         setStatus(ProofRequestStatuses.VerificationRequested)
         statusPollTimeout.current = window.setTimeout(checkVerificationStatus, pollingInterval)

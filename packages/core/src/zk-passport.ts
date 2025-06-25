@@ -1,6 +1,12 @@
 import { JsonApiClient, NotFoundError } from '@distributedlab/jac'
 
-import { RequestVerificationLinkOpts, VerificationStatus, ZkProof } from './types'
+import {
+  CustomProofParams,
+  RequestVerificationLinkOpts,
+  VerificationLinkResponse,
+  VerificationStatus,
+  ZkProof,
+} from './types'
 
 export class ZkPassport {
   #apiClient: JsonApiClient
@@ -19,40 +25,89 @@ export class ZkPassport {
   }
 
   /**
-   * Request a verification link for a user:
-   * https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getVerificationLink
-   *
-   * Put this link in a QR code or a deeplink for the RariMe App
-   *
-   * @returns RariMe app URL to generate a proof
+   * Request a verification link for a user.
+   * @see https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getVerificationLink
    */
-  async requestVerificationLink(id: string, opts?: RequestVerificationLinkOpts): Promise<string> {
-    const { data } = await this.#apiClient.post<{
-      id: string
-      type: string
-      callback_url: string
-      get_proof_params: string
-    }>('/integrations/verificator-svc/private/verification-link', {
-      body: {
-        data: {
-          id,
-          type: 'user',
-          attributes: {
-            age_lower_bound: opts?.ageLowerBound,
-            uniqueness: opts?.uniqueness,
-            nationality: opts?.nationality,
-            nationality_check: opts?.nationalityCheck,
-            event_id: opts?.eventId,
-          },
-        },
-      },
-    })
+  async requestVerificationLink(id: string, opts?: RequestVerificationLinkOpts): Promise<string>
+
+  /**
+   * Request an advanced verification link for a user.
+   * @see https://rarimo.github.io/verificator-svc/#tag/Advanced-verification/operation/getVerificationLinkV2
+   */
+  async requestVerificationLink(id: string, opts: CustomProofParams): Promise<string>
+
+  async requestVerificationLink(
+    id: string,
+    opts?: RequestVerificationLinkOpts | CustomProofParams,
+  ): Promise<string> {
+    const proofParamsUrl =
+      opts && 'selector' in opts
+        ? await this._getCustomProofParamsUrl(id, opts)
+        : await this._getVerificationLinkProofParamsUrl(id, opts)
 
     const proofRequestUrl = new URL('https://app.rarime.com/external')
     proofRequestUrl.searchParams.append('type', 'proof-request')
-    proofRequestUrl.searchParams.append('proof_params_url', data.get_proof_params)
-
+    proofRequestUrl.searchParams.append('proof_params_url', proofParamsUrl)
     return proofRequestUrl.href
+  }
+
+  private async _getVerificationLinkProofParamsUrl(
+    id: string,
+    opts?: RequestVerificationLinkOpts,
+  ): Promise<string> {
+    const { data } = await this.#apiClient.post<VerificationLinkResponse>(
+      '/integrations/verificator-svc/private/verification-link',
+      {
+        body: {
+          data: {
+            id,
+            type: 'user',
+            attributes: {
+              age_lower_bound: opts?.ageLowerBound,
+              uniqueness: opts?.uniqueness,
+              nationality: opts?.nationality,
+              nationality_check: opts?.nationalityCheck,
+              event_id: opts?.eventId,
+            },
+          },
+        },
+      },
+    )
+
+    return data.get_proof_params
+  }
+
+  private async _getCustomProofParamsUrl(id: string, opts: CustomProofParams): Promise<string> {
+    const safeNum = (v?: string) => (v ? Number(v) : undefined)
+
+    const { data } = await this.#apiClient.post<VerificationLinkResponse>(
+      '/integrations/verificator-svc/v2/private/verification-link',
+      {
+        body: {
+          data: {
+            id,
+            type: 'advanced_verification',
+            attributes: {
+              timestamp_lower_bound: safeNum(opts.timestampLowerBound),
+              timestamp_upper_bound: safeNum(opts.timestampUpperBound),
+              event_id: opts.eventId,
+              selector: opts.selector,
+              citizenship_mask: opts.citizenshipMask,
+              sex: opts.sex,
+              identity_counter_lower_bound: safeNum(opts.identityCounterLowerBound),
+              identity_counter_upper_bound: safeNum(opts.identityCounterUpperBound),
+              birth_date_lower_bound: opts.birthDateLowerBound,
+              birth_date_upper_bound: opts.birthDateUpperBound,
+              event_data: opts.eventData,
+              expiration_date_lower_bound: opts.expirationDateLowerBound,
+              expiration_date_upper_bound: opts.expirationDateUpperBound,
+            },
+          },
+        },
+      },
+    )
+
+    return data.get_proof_params
   }
 
   /**
