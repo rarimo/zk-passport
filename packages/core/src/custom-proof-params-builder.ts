@@ -18,12 +18,12 @@ export class CustomProofParamsBuilder {
 
   /**
    * Set the selector bitmask for the proof.
-   * Accepts binary ('0b...'), decimal ('123'), or hex ('0x...') literals.
+   * Accepts binary ("0b..."), decimal ("123"), or hex ("0x...") literals.
    * Internally stores as decimal string.
    * @example
-   * builder.withSelector('0b1010') // binary → stored as '10'
-   * builder.withSelector('42')     // decimal → stored as '42'
-   * builder.withSelector('0x2A')   // hex → stored as '42'
+   * builder.withSelector("0b1010") // binary → stored as "10"
+   * builder.withSelector("42")     // decimal → stored as "42"
+   * builder.withSelector("0x2A")   // hex → stored as "42"
    */
   withSelector(selector: string): this {
     if (BINARY_REG_EX.test(selector)) {
@@ -62,9 +62,14 @@ export class CustomProofParamsBuilder {
   }
 
   /**
-   * Set the ISO 3166-1 alpha-3 country code for citizenship.
-   * Validates that `mask` is one of the allowed codes in `COUNTRIES`.
-   * @example "UKR"
+   * Citizenship mask from an `ISO 3166-1 alpha-3 country code`.
+   * Most countries follow the standard 3-letter format like "UKR", "USA", "FRA", etc.
+   *
+   * ⚠️ Exception: `"D<<"` is used for Germany in some passport formats
+   * — it's a placeholder with a 1-letter country code (`D`) followed by filler characters.
+   *
+   * @example "UKR" // Ukraine
+   * @example "D<<" // Germany (placeholder format)
    */
   withCitizenshipMask(mask: PassportCitizenshipCode): this {
     this.opts.citizenshipMask = mask
@@ -111,13 +116,13 @@ export class CustomProofParamsBuilder {
   }
 
   /**
-   * Set both birth date bounds using 'yyMMdd' format strings.
+   * Set both birth date bounds using `yyMMdd` format strings.
    * Validates each bound as exactly 6 digits and converts to bytes32 hex.
-   * @param bounds.lower Lower bound as 6-digit 'yyMMdd'
-   * @param bounds.upper Upper bound as 6-digit 'yyMMdd'
+   * @param bounds.lower Lower bound as 6-digit `yyMMdd`
+   * @param bounds.upper Upper bound as 6-digit `yyMMdd`
    * @example
-   * '010616' // 16 June of 2001
-   * '000000' // Used for zero date
+   * "010616" // 16 June of 2001
+   * "000000" // Used for zero date
    */
   withBirthDateBounds(bounds: { lower: string; upper: string }): this {
     if (!PASSPORT_DATE_REG_EX.test(bounds.lower)) {
@@ -134,7 +139,7 @@ export class CustomProofParamsBuilder {
   /**
    * Event data in hex format
    * Arbitrary data tied to the event (e.g., ETH address or hash of an email).
-   * @example '0xabcdef1234'
+   * @example "0xabcdef1234"
    */
   withEventData(hex: `0x${string}`): this {
     this.opts.eventData = hex
