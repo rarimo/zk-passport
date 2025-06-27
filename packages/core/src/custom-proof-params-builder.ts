@@ -2,7 +2,7 @@ import {
   BINARY_REG_EX,
   DECIMAL_REG_EX,
   HEX_REG_EX,
-  MAX_EVENT_ID_DIGITS,
+  MAX_EVENT_ID_BIT_LENGTH,
   PASSPORT_DATE_REG_EX,
 } from './constants'
 import { CustomProofParams, PassportCitizenshipCode, Sex } from './types'
@@ -45,19 +45,42 @@ export class CustomProofParamsBuilder {
   }
 
   /**
-   * Must be a non-negative integer and no more than 31 decimal digits.
-   * @example "10" // Decimal number wrapped in a string
-   * @example "0" // Valid minimum value
+   * Sets the event ID used for nullifier domain separation.
+   *
+   * Accepts a decimal string or a 0x-prefixed hexadecimal string.
+   * Regardless of format, the value must fit within **254 bits**.
+   *
+   * This ensures compatibility with ZK circuits or field constraints.
+   *
+   * @param eventId - A non-negative decimal string or 0x-prefixed hex string
+   * @returns The builder instance
+   *
+   * @example "123"
+   * @example "0x1a2b3c"
+   * @throws If input is not a valid non-negative decimal or hex string
+   * @throws If the resulting number exceeds 254 bits
    */
   withEventId(eventId: string): this {
-    if (!DECIMAL_REG_EX.test(eventId)) {
-      throw new Error(`eventId must be a non-negative decimal string`)
+    let parsed: bigint
+
+    try {
+      parsed = BigInt(eventId)
+    } catch {
+      throw new Error('eventId must be a valid non-negative decimal or 0x-prefixed hex string')
     }
 
-    if (eventId.length > MAX_EVENT_ID_DIGITS) {
-      throw new Error(`eventId must be ≤ ${MAX_EVENT_ID_DIGITS} digits; got ${eventId.length}`)
+    if (parsed < 0n) {
+      throw new Error('eventId must not be negative')
     }
-    this.opts.eventId = eventId
+
+    const bitLength = parsed.toString(2).length
+    if (bitLength > MAX_EVENT_ID_BIT_LENGTH) {
+      throw new Error(
+        `eventId exceeds ${MAX_EVENT_ID_BIT_LENGTH}-bit limit (got ${bitLength} bits)`,
+      )
+    }
+
+    this.opts.eventId = parsed.toString()
     return this
   }
 
