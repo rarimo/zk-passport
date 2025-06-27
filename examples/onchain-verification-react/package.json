@@ -10,9 +10,15 @@
   "dependencies": {
     "@rarimo/zk-passport": "file:../../packages/core",
     "@rarimo/zk-passport-react": "file:../../packages/react",
+    "@reown/appkit": "1.7.7",
+    "@reown/appkit-adapter-bitcoin": "1.7.7",
+    "@reown/appkit-adapter-wagmi": "1.7.7",
+    "@tanstack/react-query": "^5.80.2",
+    "@wagmi/core": "^2.17.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwindcss": "^4.0.17"
+    "tailwindcss": "^4.0.17",
+    "wagmi": "^2.15.4"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.17",
