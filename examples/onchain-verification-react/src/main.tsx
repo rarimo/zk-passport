@@ -7,15 +7,16 @@ import { createRoot } from 'react-dom/client'
 import { WagmiProvider } from 'wagmi'
 
 import App from './App'
-import { ethNetworks, REOWN_ID, wagmiAdapter } from './wagmi.config'
+import { config } from './config'
+import { ethNetworks, wagmiAdapter } from './wagmi.config'
 
 createAppKit({
   adapters: [wagmiAdapter],
   networks: [...ethNetworks],
-  projectId: REOWN_ID,
+  projectId: config.REOWN_ID,
   themeMode: 'dark',
   features: {
-    analytics: true,
+    analytics: false,
     socials: [],
     email: false,
   },

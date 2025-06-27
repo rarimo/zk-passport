@@ -3,7 +3,7 @@ export const DECIMAL_REG_EX = /^[0-9]+$/
 export const HEX_REG_EX = /^0x[\da-fA-F]+$/
 export const PASSPORT_DATE_REG_EX = /^\d{6}$/
 
-export const MAX_EVENT_ID_DIGITS = 31
+export const MAX_EVENT_ID_BIT_LENGTH = 254
 
 export const PASSPORT_CITIZENSHIP_CODES = [
   'AFG',

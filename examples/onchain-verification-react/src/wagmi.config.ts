@@ -2,11 +2,11 @@ import { AppKitNetwork, defineChain } from '@reown/appkit/networks'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { http } from 'wagmi'
 
-export const REOWN_ID = '9eb385e4b93c0798cd7fa751badc11f5'
+import { config } from './config'
 
 export const rarimoTestnetAppKitChain: AppKitNetwork = {
-  id: 201411,
-  name: 'Rarimo Mainnet Beta',
+  id: 7368,
+  name: 'Rarimo L2',
   caipNetworkId: 'eip155:201411',
   chainNamespace: 'eip155',
   nativeCurrency: {
@@ -16,7 +16,7 @@ export const rarimoTestnetAppKitChain: AppKitNetwork = {
   },
   rpcUrls: {
     default: {
-      http: ['https://rpc.evm.mainnet.rarimo.com'],
+      http: ['https://l2.rarimo.com'],
     },
   },
   contracts: {},
@@ -36,7 +36,7 @@ export const ethNetworks = [activeNetwork] as [AppKitNetwork, ...AppKitNetwork[]
 
 export const wagmiAdapter = new WagmiAdapter({
   networks: ethNetworks,
-  projectId: REOWN_ID,
+  projectId: config.REOWN_ID,
   transports: {
     [activeNetwork.id]: http(activeNetwork.rpcUrls.default.http[0]),
   },
