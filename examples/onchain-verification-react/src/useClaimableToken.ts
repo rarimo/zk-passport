@@ -1,8 +1,14 @@
 import { ZkProof } from '@rarimo/zk-passport'
 import { useAppKitAccount } from '@reown/appkit/react'
-import { estimateGas, getBalance, getPublicClient, readContract } from '@wagmi/core'
+import {
+  estimateGas,
+  getBalance,
+  getPublicClient,
+  readContract,
+  waitForTransactionReceipt,
+} from '@wagmi/core'
 import { encodeFunctionData, toHex } from 'viem'
-import { useReadContract } from 'wagmi'
+import { useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
 
 import { ClaimableTokenAbi } from './ClaimableTokenAbi'
 import { config } from './config'
@@ -10,31 +16,6 @@ import { wagmiAdapter } from './wagmi.config'
 
 export default function useClaimableToken() {
   const { address } = useAppKitAccount({ namespace: 'eip155' })
-
-  const getEventData = () => {
-    return readContract(wagmiAdapter.wagmiConfig, {
-      abi: ClaimableTokenAbi,
-      address: config.CONTRACT_ADDRESS,
-      functionName: 'getEventData',
-    })
-  }
-
-  const getSelector = () => {
-    return readContract(wagmiAdapter.wagmiConfig, {
-      abi: ClaimableTokenAbi,
-      address: config.CONTRACT_ADDRESS,
-      functionName: 'SELECTOR',
-    })
-  }
-
-  const getEventId = (address: `0x${string}`) => {
-    return readContract(wagmiAdapter.wagmiConfig, {
-      abi: ClaimableTokenAbi,
-      address: config.CONTRACT_ADDRESS,
-      functionName: 'getEventId',
-      args: [address],
-    })
-  }
 
   const { data: isClaimed, refetch: refetchIsClaimed } = useReadContract({
     abi: ClaimableTokenAbi,
@@ -44,6 +25,18 @@ export default function useClaimableToken() {
     query: {
       initialData: false,
     },
+  })
+
+  const { writeContractAsync: claim, data: txHash, isPending: isClaimPending } = useWriteContract()
+
+  const {
+    isLoading: isClaiming,
+    isSuccess: isClaimSuccess,
+    isError: isClaimError,
+    error: claimError,
+  } = useWaitForTransactionReceipt({
+    hash: txHash,
+    query: { enabled: Boolean(txHash) },
   })
 
   const estimateClaim = async (proof: ZkProof): Promise<boolean> => {
@@ -108,13 +101,74 @@ export default function useClaimableToken() {
     }
   }
 
+  const claimToken = async (proof: ZkProof) => {
+    if (!address) throw new Error('No address')
+
+    const nullifier = BigInt(proof.pubSignals[0])
+    const idCreationTimestamp = BigInt(proof.pubSignals[15])
+    const tokenId = BigInt(proof.pubSignals[11])
+    const root = BigInt(proof.pubSignals[13])
+
+    const a = [BigInt(proof.proof.piA[0]), BigInt(proof.proof.piA[1])] as const
+    const b = [
+      [BigInt(proof.proof.piB[0][1]), BigInt(proof.proof.piB[0][0])],
+      [BigInt(proof.proof.piB[1][1]), BigInt(proof.proof.piB[1][0])],
+    ] as const
+    const c = [BigInt(proof.proof.piC[0]), BigInt(proof.proof.piC[1])] as const
+
+    const hash = await claim({
+      abi: ClaimableTokenAbi,
+      address: config.CONTRACT_ADDRESS,
+      functionName: 'claim',
+      args: [
+        toHex(tokenId, { size: 32 }),
+        root,
+        address.toLowerCase().trim() as `0x${string}`,
+        {
+          nullifier,
+          identityCreationTimestamp: idCreationTimestamp,
+        },
+        { a, b, c },
+      ],
+    })
+
+    const receipt = await waitForTransactionReceipt(wagmiAdapter.wagmiConfig, {
+      hash,
+    })
+
+    return receipt
+  }
+
   return {
-    getEventData,
-    getSelector,
-    getEventId,
+    getEventData: () =>
+      readContract(wagmiAdapter.wagmiConfig, {
+        abi: ClaimableTokenAbi,
+        address: config.CONTRACT_ADDRESS,
+        functionName: 'getEventData',
+      }),
+
+    getSelector: () =>
+      readContract(wagmiAdapter.wagmiConfig, {
+        abi: ClaimableTokenAbi,
+        address: config.CONTRACT_ADDRESS,
+        functionName: 'SELECTOR',
+      }),
+
+    getEventId: (address: `0x${string}`) =>
+      readContract(wagmiAdapter.wagmiConfig, {
+        abi: ClaimableTokenAbi,
+        address: config.CONTRACT_ADDRESS,
+        functionName: 'getEventId',
+        args: [address],
+      }),
 
     isClaimed,
     refetchIsClaimed,
     estimateClaim,
+    claimToken,
+    isClaiming: isClaiming || isClaimPending,
+    isClaimSuccess,
+    isClaimError,
+    claimError,
   }
 }

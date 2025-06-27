@@ -26,8 +26,16 @@ export default function App() {
   const { isConnected, status: ethStatus, address } = useAppKitAccount({ namespace: 'eip155' })
   const events = useAppKitEvents()
 
-  const { getSelector, getEventData, getEventId, isClaimed, refetchIsClaimed, estimateClaim } =
-    useClaimableToken()
+  const {
+    getSelector,
+    getEventData,
+    getEventId,
+    isClaimed,
+    refetchIsClaimed,
+    estimateClaim,
+    isClaiming,
+    claimToken,
+  } = useClaimableToken()
 
   const isInitializing =
     events.data.event === 'MODAL_CREATED' ||
@@ -80,7 +88,8 @@ export default function App() {
           setIsEstimateError(true)
           return
         }
-        console.log('Refetching isClaimed...')
+        // await claimToken(proof)
+        console.log('refetching isClaimed...')
         await refetchIsClaimed()
       } finally {
         setIsEstimatingProof(false)
@@ -99,28 +108,36 @@ export default function App() {
       <Header address={address!} onDisconnect={disconnect} />
       <main className='flex flex-col md:flex-row gap-10 md:gap-16 items-start justify-center w-full max-w-6xl px-4 mx-auto py-10'>
         <section className='w-full md:w-1/2 space-y-6'>
-          <header>
+          <div>
             <h1 className='text-2xl font-bold text-gray-800'>🛡️ ZK Passport Example</h1>
             <p className='text-sm text-gray-500'>
               Requesting verification with the following parameters:
             </p>
-          </header>
+          </div>
 
           <button
-            className='px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition disabled:opacity-50'
-            disabled={isBuildingOpts}
+            className={`px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition disabled:opacity-50 ${isClaiming ? 'opacity-50' : ''}`}
+            disabled={isBuildingOpts || isClaiming}
             onClick={buildOptions}
           >
             {isBuildingOpts ? 'Building...' : 'Build Verification Options'}
           </button>
 
           {verificationOpts && eventId && (
-            <VerificationDetails verificationOpts={verificationOpts} eventId={eventId} />
+            <VerificationDetails
+              verificationOpts={verificationOpts}
+              eventId={eventId}
+              isLoading={isClaiming}
+            />
           )}
 
           <ProofStatusBlock status={status} proof={proof} />
 
           {isEstimatingProof && <p className='text-sm text-gray-500'>Checking gas requirements…</p>}
+
+          {isClaiming && (
+            <p className='text-sm text-gray-500 animate-pulse'>Claiming in progress…</p>
+          )}
 
           {isEstimateError && (
             <p className='text-sm text-red-500'>
@@ -173,13 +190,18 @@ function ClaimedNotice({ address, onDisconnect }: { address: string; onDisconnec
 
 function VerificationDetails({
   verificationOpts,
+  isLoading,
   eventId,
 }: {
   verificationOpts: CustomProofParams
+  isLoading: boolean
   eventId: string
 }) {
+  const classNames = isLoading ? 'animate-pulse opacity-50' : ''
   return (
-    <div className='space-y-3 bg-neutral-100 rounded-xl p-4 border border-neutral-200 shadow-sm'>
+    <div
+      className={`space-y-3 bg-neutral-100 rounded-xl p-4 border border-neutral-200 shadow-sm ${classNames}`}
+    >
       <p className='text-sm'>
         <span className='font-semibold'>Event ID:</span>{' '}
         <code className='text-xs text-indigo-600'>{eventId}</code>
