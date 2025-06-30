@@ -23,7 +23,9 @@
       "@/*": ["src/*"]
     }
   },
-  "exclude": ["src/tests", ".test.ts"],
+  "module": {
+    "type": "commonjs"
+  },
   "minify": false,
   "sourceMaps": true
 }

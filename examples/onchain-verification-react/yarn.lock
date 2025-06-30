@@ -709,22 +709,22 @@ __metadata:
 
 "@rarimo/zk-passport-react@file:../../packages/react::locator=zk-passport-example-app%40workspace%3A.":
   version: 0.1.2
-  resolution: "@rarimo/zk-passport-react@file:../../packages/react#../../packages/react::hash=c5619f&locator=zk-passport-example-app%40workspace%3A."
+  resolution: "@rarimo/zk-passport-react@file:../../packages/react#../../packages/react::hash=ba63a1&locator=zk-passport-example-app%40workspace%3A."
   dependencies:
     "@rarimo/zk-passport": "workspace:^"
     qrcode.react: "npm:^4.2.0"
   peerDependencies:
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/0567a0464896850b8ad4f0a1977ce6e50939b9b390f71d2f9d130ce36653566933dede3208d21068d91d65a4d4fdb66294d6aff2b1392d5615fdb235cab6c09e
+  checksum: 10c0/6e809a6a57ca82fb3da566161db12d679bcbde2513cbb153fc534c90fd7274ffbebdb028e4f198a137d3c2dc9ce24cac7e471332a1ccb4a6a6b1d94e0985e6d3
   languageName: node
   linkType: hard
 
 "@rarimo/zk-passport@file:../../packages/core::locator=zk-passport-example-app%40workspace%3A.":
   version: 0.1.2
-  resolution: "@rarimo/zk-passport@file:../../packages/core#../../packages/core::hash=680c53&locator=zk-passport-example-app%40workspace%3A."
+  resolution: "@rarimo/zk-passport@file:../../packages/core#../../packages/core::hash=33cd4b&locator=zk-passport-example-app%40workspace%3A."
   dependencies:
     "@distributedlab/jac": "npm:^1.0.0-rc.17"
-  checksum: 10c0/22fba366ae1df8592c8083ce14d848bb6ca5e55c85743e0f8328115dd5e5792b581cccfb81ef6712418f0bbbb1d4a575710fe93f697ab4d46840cc78e2b1753f
+  checksum: 10c0/1a081d39b01059eb57a151b0730fc518320ea118af8d6212bfb9869383a8485408cd9672ccdecb303228358493733854d5fae5540f3cd0ea698b8662e6043166
   languageName: node
   linkType: hard
 
@@ -5275,7 +5275,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:>=2.29.0, viem@npm:^2.1.1":
+"viem@npm:2.31.4, viem@npm:>=2.29.0, viem@npm:^2.1.1":
   version: 2.31.4
   resolution: "viem@npm:2.31.4"
   dependencies:
@@ -5625,6 +5625,7 @@ __metadata:
     react-dom: "npm:^19.0.0"
     tailwindcss: "npm:^4.0.17"
     typescript: "npm:^5.8.2"
+    viem: "npm:2.31.4"
     vite: "npm:^6.2.3"
     wagmi: "npm:^2.15.4"
   languageName: unknown

@@ -42,35 +42,12 @@ export default function useClaimableToken() {
   const estimateClaim = async (proof: ZkProof): Promise<boolean> => {
     try {
       if (!address) throw new Error('No address')
-      if (!proof?.proof?.piA?.length || !proof?.proof?.piB?.length || !proof?.proof?.piC?.length) {
-        throw new Error('Invalid proof structure')
-      }
-
-      const nullifier = BigInt(proof.pubSignals[0])
-      const idCreationTimestamp = BigInt(proof.pubSignals[15])
-      const tokenId = BigInt(proof.pubSignals[11])
-      const root = BigInt(proof.pubSignals[13])
-
-      const a = [BigInt(proof.proof.piA[0]), BigInt(proof.proof.piA[1])] as const
-      const b = [
-        [BigInt(proof.proof.piB[0][1]), BigInt(proof.proof.piB[0][0])],
-        [BigInt(proof.proof.piB[1][1]), BigInt(proof.proof.piB[1][0])],
-      ] as const
-      const c = [BigInt(proof.proof.piC[0]), BigInt(proof.proof.piC[1])] as const
+      const { args } = buildClaimArguments(proof, address)
 
       const encodedData = encodeFunctionData({
         abi: ClaimableTokenAbi,
         functionName: 'claim',
-        args: [
-          toHex(tokenId, { size: 32 }),
-          root,
-          address.toLowerCase().trim() as `0x${string}`,
-          {
-            nullifier,
-            identityCreationTimestamp: idCreationTimestamp,
-          },
-          { a, b, c },
-        ],
+        args,
       })
 
       const [gasLimit, gasFees, balance] = await Promise.all([
@@ -85,12 +62,8 @@ export default function useClaimableToken() {
 
       const estimatedCost = gasLimit * (gasFees?.maxFeePerGas || 0n)
 
-      console.log('Estimated Gas:', gasLimit.toString())
-      console.log('Estimated Fee (wei):', estimatedCost.toString())
-      console.log('User Balance (wei):', balance.value.toString())
-
       if (balance.value < estimatedCost) {
-        console.warn('Insufficient funds to cover gas')
+        console.error('Insufficient funds to cover gas')
         return false
       }
 
@@ -103,33 +76,13 @@ export default function useClaimableToken() {
 
   const claimToken = async (proof: ZkProof) => {
     if (!address) throw new Error('No address')
-
-    const nullifier = BigInt(proof.pubSignals[0])
-    const idCreationTimestamp = BigInt(proof.pubSignals[15])
-    const tokenId = BigInt(proof.pubSignals[11])
-    const root = BigInt(proof.pubSignals[13])
-
-    const a = [BigInt(proof.proof.piA[0]), BigInt(proof.proof.piA[1])] as const
-    const b = [
-      [BigInt(proof.proof.piB[0][1]), BigInt(proof.proof.piB[0][0])],
-      [BigInt(proof.proof.piB[1][1]), BigInt(proof.proof.piB[1][0])],
-    ] as const
-    const c = [BigInt(proof.proof.piC[0]), BigInt(proof.proof.piC[1])] as const
+    const { args } = buildClaimArguments(proof, address)
 
     const hash = await claim({
       abi: ClaimableTokenAbi,
       address: config.CONTRACT_ADDRESS,
       functionName: 'claim',
-      args: [
-        toHex(tokenId, { size: 32 }),
-        root,
-        address.toLowerCase().trim() as `0x${string}`,
-        {
-          nullifier,
-          identityCreationTimestamp: idCreationTimestamp,
-        },
-        { a, b, c },
-      ],
+      args,
     })
 
     const receipt = await waitForTransactionReceipt(wagmiAdapter.wagmiConfig, {
@@ -140,6 +93,13 @@ export default function useClaimableToken() {
   }
 
   return {
+    getIdentityCreationTimestampUpperBound: () =>
+      readContract(wagmiAdapter.wagmiConfig, {
+        abi: ClaimableTokenAbi,
+        address: config.CONTRACT_ADDRESS,
+        functionName: 'getIdentityCreationTimestampUpperBound',
+      }),
+
     getEventData: () =>
       readContract(wagmiAdapter.wagmiConfig, {
         abi: ClaimableTokenAbi,
@@ -154,12 +114,27 @@ export default function useClaimableToken() {
         functionName: 'SELECTOR',
       }),
 
+    getBirthdayUpperBound: () =>
+      readContract(wagmiAdapter.wagmiConfig, {
+        abi: ClaimableTokenAbi,
+        address: config.CONTRACT_ADDRESS,
+        functionName: 'BIRTHDAY_UPPERBOUND',
+        args: [],
+      }),
+
     getEventId: (address: `0x${string}`) =>
       readContract(wagmiAdapter.wagmiConfig, {
         abi: ClaimableTokenAbi,
         address: config.CONTRACT_ADDRESS,
         functionName: 'getEventId',
         args: [address],
+      }),
+
+    getIdentityLimit: () =>
+      readContract(wagmiAdapter.wagmiConfig, {
+        abi: ClaimableTokenAbi,
+        address: config.CONTRACT_ADDRESS,
+        functionName: 'IDENTITY_LIMIT',
       }),
 
     isClaimed,
@@ -170,5 +145,36 @@ export default function useClaimableToken() {
     isClaimSuccess,
     isClaimError,
     claimError,
+  }
+}
+
+function buildClaimArguments(proof: ZkProof, address: string) {
+  if (!proof?.proof?.piA?.length || !proof?.proof?.piB?.length || !proof?.proof?.piC?.length) {
+    throw new Error('Invalid proof structure')
+  }
+
+  const nullifier = BigInt(proof.pubSignals[0])
+  const idCreationTimestamp = BigInt(proof.pubSignals[15])
+  const tokenId = BigInt(proof.pubSignals[11])
+  const root = BigInt(proof.pubSignals[13])
+
+  const a = [BigInt(proof.proof.piA[0]), BigInt(proof.proof.piA[1])] as const
+  const b = [
+    [BigInt(proof.proof.piB[0][1]), BigInt(proof.proof.piB[0][0])],
+    [BigInt(proof.proof.piB[1][1]), BigInt(proof.proof.piB[1][0])],
+  ] as const
+  const c = [BigInt(proof.proof.piC[0]), BigInt(proof.proof.piC[1])] as const
+
+  return {
+    args: [
+      toHex(tokenId, { size: 32 }),
+      root,
+      address.toLowerCase().trim() as `0x${string}`,
+      {
+        nullifier,
+        identityCreationTimestamp: idCreationTimestamp,
+      },
+      { a, b, c },
+    ] as const,
   }
 }

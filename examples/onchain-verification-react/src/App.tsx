@@ -1,4 +1,10 @@
-import { CustomProofParams, CustomProofParamsBuilder, ZkProof } from '@rarimo/zk-passport'
+import {
+  CustomProofParams,
+  CustomProofParamsBuilder,
+  encodePassportDate,
+  hexToAscii,
+  ZkProof,
+} from '@rarimo/zk-passport'
 import ZkPassportQrCode, { ProofRequestStatuses } from '@rarimo/zk-passport-react'
 import { useAppKitAccount, useAppKitEvents } from '@reown/appkit/react'
 import { useEffect, useState } from 'react'
@@ -13,12 +19,15 @@ import Spinner from './components/Spinner'
 import { config } from './config'
 import useClaimableToken from './useClaimableToken'
 
+const ZERO_DATE = '000000'
+type ErrorType = 'estimate' | 'claim'
+
 export default function App() {
   const [status, setStatus] = useState(ProofRequestStatuses.RequestInitiated)
   const [proof, setProof] = useState<ZkProof | null>(null)
   const [verificationOpts, setVerificationOpts] = useState<CustomProofParams | null>(null)
   const [eventId, setEventId] = useState<string | null>(null)
-  const [isEstimateError, setIsEstimateError] = useState(false)
+  const [errorType, setErrorType] = useState<null | ErrorType>(null)
   const [isBuildingOpts, setIsBuildingOpts] = useState(false)
   const [isEstimatingProof, setIsEstimatingProof] = useState(false)
 
@@ -34,6 +43,9 @@ export default function App() {
     refetchIsClaimed,
     estimateClaim,
     isClaiming,
+    getIdentityCreationTimestampUpperBound,
+    getBirthdayUpperBound,
+    getIdentityLimit,
     claimToken,
   } = useClaimableToken()
 
@@ -44,28 +56,42 @@ export default function App() {
 
   async function buildOptions() {
     if (!address) return
-    setIsEstimateError(false)
+    setErrorType(null)
     setIsBuildingOpts(true)
 
     try {
-      const [selectorRaw, eventData, rawEventId] = await Promise.all([
+      const [
+        selectorRaw,
+        eventData,
+        rawEventId,
+        rawIdentityCreationTimestampUpperBound,
+        rawBirthdayUpperBound,
+        rawIdentityLimit,
+      ] = await Promise.all([
         getSelector(),
         getEventData(),
         getEventId(address as `0x${string}`),
+        getIdentityCreationTimestampUpperBound(),
+        getBirthdayUpperBound(),
+        getIdentityLimit(),
       ])
 
       const selector = parseInt(selectorRaw.toString()).toString()
       const eventIdHex = toHex(rawEventId)
+      const identityCreationTimestampUpperBound = rawIdentityCreationTimestampUpperBound.toString()
       const eventDataHex = toHex(eventData)
+      const birthdayUpperBound = hexToAscii(toHex(rawBirthdayUpperBound))
+      const identityCounterUpperBound = rawIdentityLimit.toString()
+      const expirationDateLowerBound = encodePassportDate(new Date())
 
       const options = new CustomProofParamsBuilder()
         .withSelector(selector)
         .withEventId(eventIdHex)
-        .withIdentityCounterBounds({ lower: '0', upper: '1' })
-        .withBirthDateBounds({ lower: '010101', upper: '020202' })
+        .withIdentityCounterBounds({ lower: '0', upper: identityCounterUpperBound })
+        .withBirthDateBounds({ lower: ZERO_DATE, upper: birthdayUpperBound })
         .withEventData(eventDataHex)
-        .withExpirationDateBounds({ lower: '240101', upper: '250101' })
-        .withTimestampBounds({ lower: '1620000000', upper: '1629999999' })
+        .withExpirationDateBounds({ upper: ZERO_DATE, lower: expirationDateLowerBound })
+        .withTimestampBounds({ lower: '0', upper: identityCreationTimestampUpperBound })
         .build()
 
       setVerificationOpts(options)
@@ -82,15 +108,19 @@ export default function App() {
 
     const tryToClaim = async () => {
       setIsEstimatingProof(true)
+      setErrorType(null)
+
       try {
         const canClaim = await estimateClaim(proof)
         if (!canClaim) {
-          setIsEstimateError(true)
+          setErrorType('estimate')
           return
         }
-        // await claimToken(proof)
-        console.log('refetching isClaimed...')
+        await claimToken(proof)
         await refetchIsClaimed()
+      } catch (e) {
+        console.error('Claim error:', e)
+        setErrorType('claim')
       } finally {
         setIsEstimatingProof(false)
       }
@@ -139,29 +169,26 @@ export default function App() {
             <p className='text-sm text-gray-500 animate-pulse'>Claiming in progress…</p>
           )}
 
-          {isEstimateError && (
-            <p className='text-sm text-red-500'>
-              Could not estimate gas. Please ensure your wallet has sufficient funds and the proof
-              is valid.
-            </p>
-          )}
-
           <DocsLink />
         </section>
 
         {verificationOpts && (
-          <aside className='w-full md:w-auto flex justify-center items-center'>
+          <aside className='max-w-[290px] w-full md:w-auto flex justify-center items-center sticky top-[40px]'>
             <div className='border border-neutral-200 shadow-md rounded-xl p-4 bg-white'>
-              <ZkPassportQrCode
-                apiUrl={config.API_URL}
-                requestId={eventId ?? ''}
-                verificationOptions={verificationOpts}
-                qrProps={{ size: 256 }}
-                className='w-full max-w-[256px]'
-                onStatusChange={setStatus}
-                onSuccess={setProof}
-                onError={console.error}
-              />
+              {errorType ? (
+                <ErrorBlock type={errorType} />
+              ) : (
+                <ZkPassportQrCode
+                  apiUrl={config.API_URL}
+                  requestId={eventId ?? ''}
+                  verificationOptions={verificationOpts}
+                  qrProps={{ size: 256 }}
+                  className='w-full max-w-[256px]'
+                  onStatusChange={setStatus}
+                  onSuccess={setProof}
+                  onError={console.error}
+                />
+              )}
             </div>
           </aside>
         )}
@@ -235,6 +262,19 @@ function ProofStatusBlock({ status, proof }: { status: string; proof: ZkProof | 
         </pre>
         {proof && <CopyButton label='Proof' content={JSON.stringify(proof, null, 2)} />}
       </div>
+    </div>
+  )
+}
+
+function ErrorBlock({ type }: { type: ErrorType }) {
+  const message =
+    type === 'estimate'
+      ? '❌ Failed to estimate gas. Please make sure your wallet has enough funds and the proof is valid.'
+      : '❌ Something went wrong during the claim. Please try again later.'
+
+  return (
+    <div className='border border-red-300 bg-red-50 text-red-700 p-4 rounded-lg w-full text-sm text-center'>
+      {message}
     </div>
   )
 }
