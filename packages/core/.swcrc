@@ -23,9 +23,6 @@
       "@/*": ["src/*"]
     }
   },
-  "module": {
-    "type": "commonjs"
-  },
   "minify": false,
   "sourceMaps": true
 }

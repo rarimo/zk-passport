@@ -14,7 +14,7 @@ createAppKit({
   adapters: [wagmiAdapter],
   networks: [...ethNetworks],
   projectId: config.REOWN_ID,
-  themeMode: 'dark',
+  themeMode: 'light',
   features: {
     analytics: false,
     socials: [],

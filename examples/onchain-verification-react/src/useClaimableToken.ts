@@ -149,7 +149,7 @@ export default function useClaimableToken() {
 }
 
 function buildClaimArguments(proof: ZkProof, address: string) {
-  if (!proof?.proof?.piA?.length || !proof?.proof?.piB?.length || !proof?.proof?.piC?.length) {
+  if (!proof.proof.piA.length || !proof.proof.piB.length || !proof.proof.piC.length) {
     throw new Error('Invalid proof structure')
   }
 
