@@ -13,11 +13,11 @@ It supports both:
 - **Basic verification** — simple identity checks such as age, uniqueness, nationality, etc.
 - **Advanced verification** — custom proof configuration with fine-grained control using a builder interface (`CustomProofParamsBuilder`).
 
-## Examples
-
-### [React](./packages/react/README.md)
+## [React](./packages/react/README.md)
 
 QR code React component for ZK Passport. It allows you to easily integrate ZK Passport into your React applications and renders a QR code for identity verification through the RariMe app.
+
+### Examples
 
 The repository also includes two examples showcasing integration:
 
