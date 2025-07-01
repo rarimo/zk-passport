@@ -9,13 +9,12 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 - `core` - Support for **Advanced Verification** with `CustomProofParamsBuilder`
 - `core` - Full type-safe interface for advanced proof parameters
-- `core` - Unit tests for advanced verification builder
-- `examples/onchain-verification-react` - New example app demonstrating onchain usage (React + TS, no contract interaction)
+- `core` - Unit tests for custom proof params builder
+- `examples/onchain-verification-react` - New example app demonstrating onchain usage (React + TS + Wagmi)
 
 ### Changed
 
-- `core` –
-  `sex` and `expirationLowerBound` are now `boolean` flags (`RequestVerificationLinkOpts`)
+- `core` – `sex` and `expirationLowerBound` are now `boolean` flags (`RequestVerificationLinkOpts`)
 
 ## [0.1.2] - 2025-04-25
 

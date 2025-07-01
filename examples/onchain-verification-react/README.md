@@ -5,7 +5,7 @@ This example demonstrates how to integrate **ZK Passport** onchain verification 
 ## Prerequisites
 
 - Node.js >= 18
-- Yarn >= 1.22
+- Yarn >= 4.7
 
 ## Installation
 
@@ -48,8 +48,8 @@ VITE_REOWN_ID='9eb385e4b93c0798cd7fa751badc11f5'
 ```
 
 - `VITE_API_URL`: The base URL of the Verificator service
-- `VITE_CONTRACT_ADDRESS`: The deployed smart contract address onchain
-- `VITE_REOWN_ID`: App ID used for linking user to an organization (Reown)
+- `VITE_CONTRACT_ADDRESS`: The smart contract address deployed to [Rarimo L2](https://docs.rarimo.com/zk-registry/network-info/)
+- `VITE_REOWN_ID`: VITE_REOWN_ID: App ID used for linking user to an organization (get it on [Reown](https://reown.com/))
 
 ## Start the App
 

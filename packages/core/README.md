@@ -2,13 +2,13 @@
 
 ZK Passport is a library for interaction with RariMe app and [RariMe verificator service](https://github.com/rarimo/verificator-svc). It encapsulates the logic of generating and verifying zero-knowledge proofs for identity verification.
 
-### Installation
+## Installation
 
 ```bash
 yarn add @rarimo/zk-passport
 ```
 
-### Usage
+## Usage
 
 ### Basic verification
 
@@ -52,30 +52,30 @@ const proof = await zkPassport.getVerifiedProof(id)
 
 ### Basic Verification (`RequestVerificationLinkOpts`)
 
-| Option                 | Type      | Description                                                      |
-| ---------------------- | --------- | ---------------------------------------------------------------- |
-| `uniqueness`           | `boolean` | Check uniqueness by passport identity counter and timestamp      |
-| `ageLowerBound`        | `number`  | Minimum age required                                             |
-| `nationality`          | `string`  | Nationality to check (ISO 3166-1 alpha-3, e.g. `"UKR"`, `"D<<"`) |
-| `nationalityCheck`     | `boolean` | Include nationality in the generated proof                       |
-| `sex`                  | `boolean` | Enable verification of user's sex                                |
-| `expirationLowerBound` | `boolean` | Require passport to be valid beyond current time                 |
-| `eventId`              | `string`  | Hex or decimal event identifier                                  |
+| Option                 | Type      | Description                                                      | Required |
+| ---------------------- | --------- | ---------------------------------------------------------------- | -------- |
+| `uniqueness`           | `boolean` | Check uniqueness by passport identity counter and timestamp      | Optional |
+| `ageLowerBound`        | `number`  | Minimum age required                                             | Optional |
+| `nationality`          | `string`  | Nationality to check (ISO 3166-1 alpha-3, e.g. `"UKR"`, `"D<<"`) | Optional |
+| `nationalityCheck`     | `boolean` | Include nationality in the generated proof                       | Optional |
+| `sex`                  | `boolean` | Enable verification of user's sex                                | Optional |
+| `expirationLowerBound` | `boolean` | Require passport to be valid beyond current time                 | Optional |
+| `eventId`              | `string`  | Hex or decimal event identifier                                  | Optional |
 
 ### Advanced Verification (`CustomProofParams`)
 
-| Field                       | Type     | Description                                                    |
-| --------------------------- | -------- | -------------------------------------------------------------- |
-| `eventId`                   | `string` | Decimal string (≤254 bits) used to generate nullifier          |
-| `selector`                  | `string` | Bitmask (decimal string) controlling which fields are revealed |
-| `citizenshipMask`           | `string` | ISO 3166-1 alpha-3 code (e.g. `"UKR"`, `"D<<"`)                |
-| `sex`                       | `string` | `"M"` / `"F"` / `"O"` / `""`                                   |
-| `identityCounterLowerBound` | `string` | Min allowed identity counter                                   |
-| `identityCounterUpperBound` | `string` | Max allowed identity counter                                   |
-| `birthDateLowerBound`       | `string` | Lower birth date (hex `yyMMdd`)                                |
-| `birthDateUpperBound`       | `string` | Upper birth date (hex `yyMMdd`)                                |
-| `eventData`                 | `string` | Arbitrary hex value tied to event                              |
-| `expirationDateLowerBound`  | `string` | Lower bound for passport expiration (hex `yyMMdd`)             |
-| `expirationDateUpperBound`  | `string` | Upper bound for passport expiration (hex `yyMMdd`)             |
-| `timestampLowerBound`       | `string` | UNIX timestamp (seconds) — must be before registration         |
-| `timestampUpperBound`       | `string` | UNIX timestamp (seconds) — must be on/after registration       |
+| Field                       | Type     | Description                                                    | Required     |
+| --------------------------- | -------- | -------------------------------------------------------------- | ------------ |
+| `eventId`                   | `string` | Decimal string (≤254 bits) used to generate nullifier          | **Required** |
+| `selector`                  | `string` | Bitmask (decimal string) controlling which fields are revealed | **Required** |
+| `citizenshipMask`           | `string` | ISO 3166-1 alpha-3 code (e.g. `"UKR"`, `"D<<"`)                | **Optional** |
+| `sex`                       | `string` | `"M"` / `"F"` / `"O"` / `""`                                   | **Optional** |
+| `identityCounterLowerBound` | `string` | Min allowed identity counter                                   | **Optional** |
+| `identityCounterUpperBound` | `string` | Max allowed identity counter                                   | **Optional** |
+| `birthDateLowerBound`       | `string` | Lower birth date (hex `yyMMdd`)                                | **Optional** |
+| `birthDateUpperBound`       | `string` | Upper birth date (hex `yyMMdd`)                                | **Optional** |
+| `eventData`                 | `string` | Arbitrary hex value tied to event                              | **Optional** |
+| `expirationDateLowerBound`  | `string` | Lower bound for passport expiration (hex `yyMMdd`)             | **Optional** |
+| `expirationDateUpperBound`  | `string` | Upper bound for passport expiration (hex `yyMMdd`)             | **Optional** |
+| `timestampLowerBound`       | `string` | UNIX timestamp (seconds) — must be before registration         | **Optional** |
+| `timestampUpperBound`       | `string` | UNIX timestamp (seconds) — must be on/after registration       | **Optional** |

@@ -6,19 +6,11 @@ It showcases the offchain proof generation and verification flow — without req
 ## Prerequisites
 
 - Node.js >= 18
-- Yarn >= 1.22
+- Yarn >= 4.7
 
 ## Installation
 
-From the project root:
-
-```bash
-yarn install
-```
-
-## Installation
-
-Clone the repo and install dependencies from the `monorepo root`:
+Install dependencies from the `monorepo root`:
 
 ```bash
 yarn install

@@ -74,3 +74,16 @@ return (
   />
 )
 ```
+
+### `ZkPassportQrCode` Props
+
+| Prop                  | Type                                                 | Description                                                                  | Required     |
+| --------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------- | ------------ |
+| `apiUrl`              | `string`                                             | URL of the verificator service API. Defaults to `https://api.app.rarime.com` | **Optional** |
+| `requestId`           | `string`                                             | Unique ID for the user/session. Used to associate the request with a proof.  | **Required** |
+| `verificationOptions` | `RequestVerificationLinkOpts` or `CustomProofParams` | Parameters for either basic or advanced proof request.                       | **Required** |
+| `pollingInterval`     | `number`                                             | Interval (in ms) to poll verification status. Defaults to `5000`.            | **Optional** |
+| `qrProps`             | `Omit<ComponentProps<typeof QRCodeSVG>, 'value'>`    | Props passed to the QRCodeSVG component (except `value`).                    | **Required** |
+| `onStatusChange`      | `(status: ProofRequestStatuses) => void`             | Callback triggered when the proof request status changes.                    | **Required** |
+| `onSuccess`           | `(proof: ZkProof) => void`                           | Callback called when proof is successfully verified.                         | **Required** |
+| `onError`             | `(error: Error) => void`                             | Callback called when an error occurs in the verification process.            | **Required** |
