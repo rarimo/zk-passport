@@ -23,7 +23,6 @@
       "@/*": ["src/*"]
     }
   },
-  "exclude": ["src/tests", ".test.ts"],
   "minify": false,
   "sourceMaps": true
 }

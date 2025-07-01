@@ -49,9 +49,13 @@ export interface RequestVerificationLinkOpts {
  */
 export interface CustomProofParams {
   /**
-   * Must be decimal string and less than 31 bytes.
-   * Used to generate different nullifiers by the same identity for different use cases (events).
-   * @example "1"
+   * Must be a non-negative **decimal string** representing an integer
+   * whose binary representation fits in **at most 254 bits**.
+   *
+   * This value is used for generating distinct nullifiers
+   * and must conform to the circuit’s field size limits.
+   *
+   * @example "1234567890123456789012345678901234567890"
    */
   eventId: string
   /**

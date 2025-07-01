@@ -2,7 +2,7 @@ import {
   BINARY_REG_EX,
   DECIMAL_REG_EX,
   HEX_REG_EX,
-  MAX_EVENT_ID_DIGITS,
+  MAX_EVENT_ID_BIT_LENGTH,
   PASSPORT_DATE_REG_EX,
 } from './constants'
 import { CustomProofParams, PassportCitizenshipCode, Sex } from './types'
@@ -18,12 +18,12 @@ export class CustomProofParamsBuilder {
 
   /**
    * Set the selector bitmask for the proof.
-   * Accepts binary ('0b...'), decimal ('123'), or hex ('0x...') literals.
+   * Accepts binary ("0b..."), decimal ("123"), or hex ("0x...") literals.
    * Internally stores as decimal string.
    * @example
-   * builder.withSelector('0b1010') // binary → stored as '10'
-   * builder.withSelector('42')     // decimal → stored as '42'
-   * builder.withSelector('0x2A')   // hex → stored as '42'
+   * builder.withSelector("0b1010") // binary → stored as "10"
+   * builder.withSelector("42")     // decimal → stored as "42"
+   * builder.withSelector("0x2A")   // hex → stored as "42"
    */
   withSelector(selector: string): this {
     if (BINARY_REG_EX.test(selector)) {
@@ -45,26 +45,54 @@ export class CustomProofParamsBuilder {
   }
 
   /**
-   * Must be a non-negative integer and no more than 31 decimal digits.
-   * @example "10" // Decimal number wrapped in a string
-   * @example "0" // Valid minimum value
+   * Sets the event ID used for nullifier domain separation.
+   *
+   * Accepts a decimal string or a 0x-prefixed hexadecimal string.
+   * Regardless of format, the value must fit within **254 bits**.
+   *
+   * This ensures compatibility with ZK circuits or field constraints.
+   *
+   * @param eventId - A non-negative decimal string or 0x-prefixed hex string
+   * @returns The builder instance
+   *
+   * @example "123"
+   * @example "0x1a2b3c"
+   * @throws If input is not a valid non-negative decimal or hex string
+   * @throws If the resulting number exceeds 254 bits
    */
   withEventId(eventId: string): this {
-    if (!DECIMAL_REG_EX.test(eventId)) {
-      throw new Error(`eventId must be a non-negative decimal string`)
+    let parsed: bigint
+
+    try {
+      parsed = BigInt(eventId)
+    } catch {
+      throw new Error('eventId must be a valid non-negative decimal or 0x-prefixed hex string')
     }
 
-    if (eventId.length > MAX_EVENT_ID_DIGITS) {
-      throw new Error(`eventId must be ≤ ${MAX_EVENT_ID_DIGITS} digits; got ${eventId.length}`)
+    if (parsed < 0n) {
+      throw new Error('eventId must not be negative')
     }
-    this.opts.eventId = eventId
+
+    const bitLength = parsed.toString(2).length
+    if (bitLength > MAX_EVENT_ID_BIT_LENGTH) {
+      throw new Error(
+        `eventId exceeds ${MAX_EVENT_ID_BIT_LENGTH}-bit limit (got ${bitLength} bits)`,
+      )
+    }
+
+    this.opts.eventId = parsed.toString()
     return this
   }
 
   /**
-   * Set the ISO 3166-1 alpha-3 country code for citizenship.
-   * Validates that `mask` is one of the allowed codes in `COUNTRIES`.
-   * @example "UKR"
+   * Citizenship mask from an `ISO 3166-1 alpha-3 country code`.
+   * Most countries follow the standard 3-letter format like "UKR", "USA", "FRA", etc.
+   *
+   * ⚠️ Exception: `"D<<"` is used for Germany in some passport formats
+   * — it's a placeholder with a 1-letter country code (`D`) followed by filler characters.
+   *
+   * @example "UKR" // Ukraine
+   * @example "D<<" // Germany (placeholder format)
    */
   withCitizenshipMask(mask: PassportCitizenshipCode): this {
     this.opts.citizenshipMask = mask
@@ -111,13 +139,13 @@ export class CustomProofParamsBuilder {
   }
 
   /**
-   * Set both birth date bounds using 'yyMMdd' format strings.
+   * Set both birth date bounds using `yyMMdd` format strings.
    * Validates each bound as exactly 6 digits and converts to bytes32 hex.
-   * @param bounds.lower Lower bound as 6-digit 'yyMMdd'
-   * @param bounds.upper Upper bound as 6-digit 'yyMMdd'
+   * @param bounds.lower Lower bound as 6-digit `yyMMdd`
+   * @param bounds.upper Upper bound as 6-digit `yyMMdd`
    * @example
-   * '010616' // 16 June of 2001
-   * '000000' // Used for zero date
+   * "010616" // 16 June of 2001
+   * "000000" // Used for zero date
    */
   withBirthDateBounds(bounds: { lower: string; upper: string }): this {
     if (!PASSPORT_DATE_REG_EX.test(bounds.lower)) {
@@ -134,7 +162,7 @@ export class CustomProofParamsBuilder {
   /**
    * Event data in hex format
    * Arbitrary data tied to the event (e.g., ETH address or hash of an email).
-   * @example '0xabcdef1234'
+   * @example "0xabcdef1234"
    */
   withEventData(hex: `0x${string}`): this {
     this.opts.eventData = hex

@@ -1,0 +1,35 @@
+{
+  "name": "onchain-verification-react",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@rarimo/zk-passport": "file:../../packages/core",
+    "@rarimo/zk-passport-react": "file:../../packages/react",
+    "@reown/appkit": "1.7.7",
+    "@reown/appkit-adapter-wagmi": "1.7.7",
+    "@tanstack/react-query": "^5.80.2",
+    "@wagmi/core": "^2.17.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.17",
+    "viem": "2.31.4",
+    "wagmi": "^2.15.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.17",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react-swc": "^3.8.1",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.3"
+  },
+  "packageManager": "yarn@4.7.0",
+  "resolutions": {
+    "@rarimo/zk-passport": "file:../../packages/core"
+  }
+}
