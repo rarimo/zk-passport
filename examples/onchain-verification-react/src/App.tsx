@@ -57,6 +57,8 @@ export default function App() {
   async function buildOptions() {
     if (!address) return
     setErrorType(null)
+    setProof(null)
+    setVerificationOpts(null)
     setIsBuildingOpts(true)
 
     try {
