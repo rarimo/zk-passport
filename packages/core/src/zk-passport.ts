@@ -13,8 +13,7 @@ export class ZkPassport {
 
   constructor(
     /**
-     * Verificator service API URL:
-     * https://github.com/rarimo/verificator-svc
+     * @see[Verificator service API URL](https://github.com/rarimo/verificator-svc)
      * @default 'https://api.app.rarime.com'
      */
     apiUrl?: string,
@@ -25,14 +24,12 @@ export class ZkPassport {
   }
 
   /**
-   * Request a verification link for a user.
-   * @see https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getVerificationLink
+   * @see[Request a verification link for a user.](https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getVerificationLink)
    */
   async requestVerificationLink(id: string, opts?: RequestVerificationLinkOpts): Promise<string>
 
   /**
-   * Request an advanced verification link for a user.
-   * @see https://rarimo.github.io/verificator-svc/#tag/Advanced-verification/operation/getVerificationLinkV2
+   * @see[Request an advanced verification link for a user.](https://rarimo.github.io/verificator-svc/#tag/Advanced-verification/operation/getVerificationLinkV2)
    */
   async requestVerificationLink(id: string, opts: CustomProofParams): Promise<string>
 
@@ -111,8 +108,7 @@ export class ZkPassport {
   }
 
   /**
-   * Get the verification status of a user:
-   * https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getUserStatus
+   * @see[Get the verification status of a user:](https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getUserStatus)
    */
   async getVerificationStatus(id: string): Promise<VerificationStatus> {
     const { data } = await this.#apiClient.get<{
@@ -125,8 +121,8 @@ export class ZkPassport {
   }
 
   /**
-   * Get the verified proof for a user:
-   * https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getProof
+   *
+   * @see:[Get the verified proof for a user:](https://rarimo.github.io/verificator-svc/#tag/User-verification/operation/getProof)
    */
   async getVerifiedProof(id: string): Promise<ZkProof | null> {
     try {

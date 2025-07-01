@@ -16,7 +16,11 @@ export interface RequestVerificationLinkOpts {
   ageLowerBound?: number
   /**
    * Check for specific user's nationality (ISO 3166-1 alpha-3 code)
-   * @example 'USA', 'GBR', 'DEU'
+   *
+   * ⚠️ Exception: `"D<<"` is used for Germany in some passport formats
+   * — it's a placeholder with a 1-letter country code (`D`) followed by filler characters.
+   *
+   * @example 'USA', 'GBR', 'D<<'
    */
   nationality?: string
   /**
