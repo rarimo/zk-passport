@@ -21,8 +21,8 @@ QR code React component for ZK Passport. It allows you to easily integrate ZK Pa
 
 The repository also includes two examples showcasing integration:
 
-- [`examples/onchain-verification-react`](./examples/onchain-verification-react) – client-side onchain verification flow.
-- [`examples/offchain-verification-react`](./examples/offchain-verification-react) – full end-to-end flow including smart contract interaction and Reown App integration (no contract interaction).
+- [`examples/onchain-verification-react`](./examples/onchain-verification-react) – full end-to-end flow including smart contract interaction and Reown App integration.
+- [`examples/offchain-verification-react`](./examples/offchain-verification-react) – client-side verification flow (no contract interaction).
 
 ## License
 
