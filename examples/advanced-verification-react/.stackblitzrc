@@ -1,4 +1,4 @@
 {
   "installDependencies": false,
-  "startCommand": "yarn start-stackblitz"
+  "startCommand": "node replace-version.mjs && yarn install && yarn start"
 }

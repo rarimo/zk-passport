@@ -5,10 +5,10 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "start-stackblitz": "node replace-version.mjs && yarn install && vite"
+    "preview": "vite preview"
   },
   "dependencies": {
+    "@rarimo/zk-passport": "workspace:^",
     "@rarimo/zk-passport-react": "workspace:^",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
