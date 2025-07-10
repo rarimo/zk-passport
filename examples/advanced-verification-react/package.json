@@ -5,10 +5,11 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start-stackblitz": "node replace-version.mjs && yarn install && vite"
   },
   "dependencies": {
-    "@rarimo/zk-passport-react": "workspace:^1.0.0",
+    "@rarimo/zk-passport-react": "workspace:^",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.0.17"

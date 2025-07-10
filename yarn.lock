@@ -1824,7 +1824,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rarimo/zk-passport-react@workspace:^1.0.0, @rarimo/zk-passport-react@workspace:packages/react":
+"@rarimo/zk-passport-react@workspace:^, @rarimo/zk-passport-react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@rarimo/zk-passport-react@workspace:packages/react"
   dependencies:
@@ -4122,7 +4122,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "advanced-verification-react@workspace:examples/advanced-verification-react"
   dependencies:
-    "@rarimo/zk-passport-react": "workspace:^1.0.0"
+    "@rarimo/zk-passport-react": "workspace:^"
     "@tailwindcss/vite": "npm:^4.0.17"
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
@@ -4532,7 +4532,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "basic-verification-react@workspace:examples/basic-verification-react"
   dependencies:
-    "@rarimo/zk-passport-react": "workspace:^1.0.0"
+    "@rarimo/zk-passport-react": "workspace:^"
     "@tailwindcss/vite": "npm:^4.0.17"
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
@@ -9328,7 +9328,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "onchain-verification-react@workspace:examples/onchain-verification-react"
   dependencies:
-    "@rarimo/zk-passport-react": "workspace:^1.0.0"
+    "@rarimo/zk-passport-react": "workspace:^"
     "@reown/appkit": "npm:1.7.13"
     "@reown/appkit-adapter-wagmi": "npm:1.7.13"
     "@tailwindcss/vite": "npm:^4.0.17"
