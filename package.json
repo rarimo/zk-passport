@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "examples/*"
   ],
   "scripts": {
-    "build": "yarn workspaces foreach -pv --topological-dev --verbose --all run build",
+    "build": "yarn workspaces foreach --no-private -pv --topological-dev --verbose --all run build",
     "lint": "yarn lint:eslint && yarn lint:misc --check",
     "lint:eslint": "eslint ./packages --ignore-path .gitignore",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
@@ -37,5 +38,5 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   },
-  "packageManager": "yarn@4.7.0"
+  "packageManager": "yarn@4.9.2"
 }

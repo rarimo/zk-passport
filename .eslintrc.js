@@ -85,5 +85,6 @@ module.exports = {
     '**/public',
     '**/.cache',
     '**/*.js',
+    '**/*.html',
   ],
 }

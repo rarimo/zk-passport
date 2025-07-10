@@ -1,15 +1,8 @@
 # Onchain Verification Example (React + TypeScript + Wagmi)
 
-This example demonstrates how to integrate **ZK Passport** onchain verification logic into a modern React app using **TypeScript**, **Wagmi**, and **Vite**.
-
-## Prerequisites
-
-- Node.js >= 18
-- Yarn >= 4.7
-
 ## Installation
 
-Clone the repo and install dependencies from the `monorepo root`:
+Install dependencies from the `monorepo root`:
 
 ```bash
 yarn install
@@ -19,18 +12,6 @@ Then build the packages from the `monorepo root`:
 
 ```bash
 yarn build
-```
-
-Navigate to the example folder:
-
-```bash
-cd examples/onchain-verification-react
-```
-
-Install local dependencies (to make sure you use the latest built packages from dist/):
-
-```bash
-yarn install
 ```
 
 ## Environment Setup
@@ -51,10 +32,20 @@ VITE_REOWN_ID='9eb385e4b93c0798cd7fa751badc11f5'
 - `VITE_CONTRACT_ADDRESS`: The smart contract address deployed to [Rarimo L2](https://docs.rarimo.com/zk-registry/network-info/)
 - `VITE_REOWN_ID`: VITE_REOWN_ID: App ID used for linking user to an organization (get it on [Reown](https://reown.com/))
 
-## Start the App
+## Running the Example
+
+From the `monorepo root`, either run:
 
 ```bash
+yarn workspace examples/onchain-verification-react start
+```
+
+or:
+
+```bash
+cd examples/onchain-verification-react
 yarn start
 ```
 
 The app will be available at http://localhost:5173 by default.
+
