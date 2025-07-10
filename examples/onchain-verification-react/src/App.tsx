@@ -1,14 +1,8 @@
-import {
-  CustomProofParams,
-  CustomProofParamsBuilder,
-  encodePassportDate,
-  hexToAscii,
-  ZkProof,
-} from '@rarimo/zk-passport'
+import { ZkProof } from '@rarimo/zk-passport'
 import ZkPassportQrCode, { ProofRequestStatuses } from '@rarimo/zk-passport-react'
 import { useAppKitAccount, useAppKitEvents } from '@reown/appkit/react'
 import { useEffect, useState } from 'react'
-import { toHex } from 'viem'
+import { Chain } from 'viem'
 import { useDisconnect } from 'wagmi'
 
 import { ConnectWalletButton } from './components/ConnectWalletButton'
@@ -18,92 +12,26 @@ import { Header } from './components/Header'
 import Spinner from './components/Spinner'
 import { config } from './config'
 import useClaimableToken from './useClaimableToken'
+import { rarimoL2AppKitChain } from './wagmi.config'
 
-const ZERO_DATE = '000000'
 type ErrorType = 'estimate' | 'claim'
 
 export default function App() {
   const [status, setStatus] = useState(ProofRequestStatuses.RequestInitiated)
   const [proof, setProof] = useState<ZkProof | null>(null)
-  const [verificationOpts, setVerificationOpts] = useState<CustomProofParams | null>(null)
-  const [eventId, setEventId] = useState<string | null>(null)
   const [errorType, setErrorType] = useState<null | ErrorType>(null)
-  const [isBuildingOpts, setIsBuildingOpts] = useState(false)
   const [isEstimatingProof, setIsEstimatingProof] = useState(false)
 
   const { disconnect } = useDisconnect()
   const { isConnected, status: ethStatus, address } = useAppKitAccount({ namespace: 'eip155' })
   const events = useAppKitEvents()
 
-  const {
-    getSelector,
-    getEventData,
-    getEventId,
-    isClaimed,
-    refetchIsClaimed,
-    estimateClaim,
-    isClaiming,
-    getIdentityCreationTimestampUpperBound,
-    getBirthdayUpperBound,
-    getIdentityLimit,
-    claimToken,
-  } = useClaimableToken()
+  const { isClaimed, refetchIsClaimed, estimateClaim, isClaiming, claimToken } = useClaimableToken()
 
   const isInitializing =
     events.data.event === 'MODAL_CREATED' ||
     ethStatus === 'connecting' ||
     ethStatus === 'reconnecting'
-
-  async function buildOptions() {
-    if (!address) return
-    setErrorType(null)
-    setProof(null)
-    setVerificationOpts(null)
-    setIsBuildingOpts(true)
-
-    try {
-      const [
-        selectorRaw,
-        eventData,
-        rawEventId,
-        rawIdentityCreationTimestampUpperBound,
-        rawBirthdayUpperBound,
-        rawIdentityLimit,
-      ] = await Promise.all([
-        getSelector(),
-        getEventData(),
-        getEventId(address as `0x${string}`),
-        getIdentityCreationTimestampUpperBound(),
-        getBirthdayUpperBound(),
-        getIdentityLimit(),
-      ])
-
-      const selector = parseInt(selectorRaw.toString()).toString()
-      const eventIdHex = toHex(rawEventId)
-      const identityCreationTimestampUpperBound = rawIdentityCreationTimestampUpperBound.toString()
-      const eventDataHex = toHex(eventData)
-      const birthdayUpperBound = hexToAscii(toHex(rawBirthdayUpperBound))
-      const identityCounterUpperBound = rawIdentityLimit.toString()
-      const expirationDateLowerBound = encodePassportDate(new Date())
-
-      const options = new CustomProofParamsBuilder()
-        .withSelector(selector)
-        .withEventId(eventIdHex)
-        .withIdentityCounterBounds({ lower: '0', upper: identityCounterUpperBound })
-        .withBirthDateBounds({ lower: ZERO_DATE, upper: birthdayUpperBound })
-        .withEventData(eventDataHex)
-        .withExpirationDateBounds({ upper: ZERO_DATE, lower: expirationDateLowerBound })
-        .withTimestampBounds({ lower: '0', upper: identityCreationTimestampUpperBound })
-        .build()
-
-      setVerificationOpts(options)
-      setEventId(eventIdHex)
-    } catch (e) {
-      console.error('Failed to build options:', e)
-    } finally {
-      setIsBuildingOpts(false)
-    }
-  }
 
   useEffect(() => {
     if (!proof) return
@@ -147,22 +75,6 @@ export default function App() {
             </p>
           </div>
 
-          <button
-            className={`px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition disabled:opacity-50 ${isClaiming ? 'opacity-50' : ''}`}
-            disabled={isBuildingOpts || isClaiming}
-            onClick={buildOptions}
-          >
-            {isBuildingOpts ? 'Building...' : 'Build Verification Options'}
-          </button>
-
-          {verificationOpts && eventId && (
-            <VerificationDetails
-              verificationOpts={verificationOpts}
-              eventId={eventId}
-              isLoading={isClaiming}
-            />
-          )}
-
           <ProofStatusBlock status={status} proof={proof} />
 
           {isEstimatingProof && <p className='text-sm text-gray-500'>Checking gas requirements…</p>}
@@ -174,7 +86,7 @@ export default function App() {
           <DocsLink />
         </section>
 
-        {verificationOpts && (
+        {address && (
           <aside className='max-w-[290px] w-full md:w-auto flex justify-center items-center sticky top-[40px]'>
             <div className='border border-neutral-200 shadow-md rounded-xl p-4 bg-white'>
               {errorType ? (
@@ -182,8 +94,12 @@ export default function App() {
               ) : (
                 <ZkPassportQrCode
                   apiUrl={config.API_URL}
-                  requestId={eventId ?? ''}
-                  verificationOptions={verificationOpts}
+                  requestId={address ?? 'unknown-account'}
+                  verificationOptions={{
+                    contractAddress: config.CONTRACT_ADDRESS,
+                    receiverAddress: address as `0x${string}`,
+                    chain: rarimoL2AppKitChain as Chain,
+                  }}
                   qrProps={{ size: 256 }}
                   className='w-full max-w-[256px]'
                   onStatusChange={setStatus}
@@ -213,39 +129,6 @@ function ClaimedNotice({ address, onDisconnect }: { address: string; onDisconnec
       >
         Disconnect Wallet
       </button>
-    </div>
-  )
-}
-
-function VerificationDetails({
-  verificationOpts,
-  isLoading,
-  eventId,
-}: {
-  verificationOpts: CustomProofParams
-  isLoading: boolean
-  eventId: string
-}) {
-  const classNames = isLoading ? 'animate-pulse opacity-50' : ''
-  return (
-    <div
-      className={`space-y-3 bg-neutral-100 rounded-xl p-4 border border-neutral-200 shadow-sm ${classNames}`}
-    >
-      <p className='text-sm'>
-        <span className='font-semibold'>Event ID:</span>{' '}
-        <code className='text-xs text-indigo-600'>{eventId}</code>
-      </p>
-      <p className='text-sm'>
-        <span className='font-semibold'>API URL:</span>{' '}
-        <code className='text-xs text-indigo-600'>{config.API_URL}</code>
-      </p>
-      <div>
-        <p className='font-semibold text-sm mb-1'>Verification Options:</p>
-        <pre className='text-xs bg-white p-2 rounded-md border border-neutral-300 overflow-auto max-h-64'>
-          {JSON.stringify(verificationOpts, null, 2)}
-        </pre>
-        <CopyButton label='Options' content={JSON.stringify(verificationOpts, null, 2)} />
-      </div>
     </div>
   )
 }

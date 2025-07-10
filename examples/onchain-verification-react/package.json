@@ -30,6 +30,7 @@
   },
   "packageManager": "yarn@4.7.0",
   "resolutions": {
-    "@rarimo/zk-passport": "file:../../packages/core"
+    "@rarimo/zk-passport": "file:../../packages/core",
+    "viem": "2.31.4"
   }
 }

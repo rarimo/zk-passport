@@ -7,7 +7,8 @@ import {
 import { QRCodeSVG } from 'qrcode.react'
 import { ComponentProps, FC, HTMLAttributes, useEffect, useRef, useState } from 'react'
 
-import { isAndroid, isIos } from './utils/device'
+import { isAndroid, isIos } from './device'
+import { buildOnChainProofParams, OnChainVerificationOptions } from './on-chain-proof-params'
 
 export enum ProofRequestStatuses {
   /**
@@ -42,7 +43,7 @@ export interface ZkPassportQrCodeProps extends Omit<HTMLAttributes<HTMLAnchorEle
   /**
    * Options for the proof request
    */
-  verificationOptions: RequestVerificationLinkOpts | CustomProofParams
+  verificationOptions: RequestVerificationLinkOpts | CustomProofParams | OnChainVerificationOptions
   /**
    * Polling interval for checking the proof status
    * @default 5000
@@ -118,15 +119,21 @@ const ZkPassportQrCode: FC<ZkPassportQrCodeProps> = ({
     }
   }
 
+  const getProofRequestUrl = async () => {
+    if ('contractAddress' in verificationOptions) {
+      const customProofParams = await buildOnChainProofParams(verificationOptions)
+      return zkPassport.requestVerificationLink(requestId, customProofParams)
+    }
+
+    return 'selector' in verificationOptions
+      ? zkPassport.requestVerificationLink(requestId, verificationOptions)
+      : zkPassport.requestVerificationLink(requestId, verificationOptions)
+  }
+
   useEffect(() => {
     const requestVerification = async () => {
       try {
-        const proofRequestUrl =
-          'selector' in verificationOptions
-            ? await zkPassport.requestVerificationLink(requestId, verificationOptions)
-            : await zkPassport.requestVerificationLink(requestId, verificationOptions)
-
-        setProofRequestUrl(proofRequestUrl)
+        setProofRequestUrl(await getProofRequestUrl())
         setStatus(ProofRequestStatuses.VerificationRequested)
         statusPollTimeout.current = window.setTimeout(checkVerificationStatus, pollingInterval)
       } catch (error) {
@@ -164,4 +171,5 @@ const ZkPassportQrCode: FC<ZkPassportQrCodeProps> = ({
   )
 }
 
+export { type OnChainVerificationOptions } from './on-chain-proof-params'
 export default ZkPassportQrCode

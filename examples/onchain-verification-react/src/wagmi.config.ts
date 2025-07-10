@@ -4,7 +4,7 @@ import { http } from 'wagmi'
 
 import { config } from './config'
 
-export const rarimoTestnetAppKitChain: AppKitNetwork = {
+export const rarimoL2AppKitChain: AppKitNetwork = {
   id: 7368,
   name: 'Rarimo L2',
   caipNetworkId: 'eip155:201411',
@@ -23,13 +23,13 @@ export const rarimoTestnetAppKitChain: AppKitNetwork = {
 }
 
 const activeNetwork = defineChain({
-  id: rarimoTestnetAppKitChain.id as number,
-  caipNetworkId: `eip155:${rarimoTestnetAppKitChain.id}`,
+  id: rarimoL2AppKitChain.id as number,
+  caipNetworkId: `eip155:${rarimoL2AppKitChain.id}`,
   chainNamespace: 'eip155',
-  name: rarimoTestnetAppKitChain.name,
-  nativeCurrency: rarimoTestnetAppKitChain.nativeCurrency,
-  rpcUrls: rarimoTestnetAppKitChain.rpcUrls,
-  blockExplorers: rarimoTestnetAppKitChain.blockExplorers,
+  name: rarimoL2AppKitChain.name,
+  nativeCurrency: rarimoL2AppKitChain.nativeCurrency,
+  rpcUrls: rarimoL2AppKitChain.rpcUrls,
+  blockExplorers: rarimoL2AppKitChain.blockExplorers,
 })
 
 export const ethNetworks = [activeNetwork] as [AppKitNetwork, ...AppKitNetwork[]]
