@@ -8,11 +8,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@rarimo/zk-passport-react": "workspace:^",
+    "@rarimo/zk-passport-react": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.0.17",
-    "viem": "^2.31.0"
+    "viem": "^2"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.17",

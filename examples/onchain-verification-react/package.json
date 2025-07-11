@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@rarimo/zk-passport-react": "workspace:^",
+    "@rarimo/zk-passport-react": "workspace:*",
     "@reown/appkit": "1.7.13",
     "@reown/appkit-adapter-wagmi": "1.7.13",
     "@tanstack/react-query": "^5.80.2",
@@ -16,7 +16,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.0.17",
-    "viem": "^2.31.0",
+    "viem": "^2",
     "wagmi": "^2.15.6"
   },
   "devDependencies": {
