@@ -81,7 +81,7 @@ return (
 
 ### Onchain verification
 
-> Important: You need to instal `viem:^2.31.0` package to use onchain verification.
+> Important: You need to install `viem:^2.31.0` package to use onchain verification.
 
 ```tsx
 import ZkPassportQrCode from '@rarimo/zk-passport-react'
