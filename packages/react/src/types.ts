@@ -34,8 +34,9 @@ export interface OnChainVerificationOptions {
    */
   contractAddress: Address
   /**
-   * that will be used in the proof `eventId`
+   * The address used in `userPayload` to build the public signals
    * @example '0xabcdefabcdefabcdefabcdefabcdefabcdef'
+   * @see {@link https://docs.rarimo.com/zk-passport/guide-on-chain-verification/#step-3-integrate-proof-verification-into-your-smart-contract Integrate proof verification into your smart contract}
    */
   receiverAddress: Address
   /**

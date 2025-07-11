@@ -136,7 +136,7 @@ Options for the [Advanced Verification](https://github.com/rarimo/zk-passport/tr
 | Property            | Type     | Description                                                                                   | Required                          |
 | ------------------- | -------- | --------------------------------------------------------------------------------------------- | ------------                      |
 | `contractAddress`   | `string` | Address of the smart contract using `@rarimo/passport-contracts` SDK.                         | **Required**                      |
-| `receiverAddress`   | `string` | Address that will be used in the proof `eventId`. Must be a valid Ethereum address.           | **Required**                      |
+| `receiverAddress`   | `string` | Address used in `userPayload` to build the public signals. Must be a valid Ethereum address.  | **Required**                      |
 | `chain`             | `Chain`  | Chain object from `viem` library. Used to specify the network for onchain verification.       | Optional, defaults to `Rarimo L2` |
 
 ## License
