@@ -20,6 +20,7 @@ import {
 } from 'viem'
 
 import { PUB_SIGNALS_ABI, REGISTRATION_SMT_ABI } from './abi'
+import { OnChainVerificationOptions } from './types'
 
 const RARIMO_L2_CHAIN: Chain = {
   id: 7368,
@@ -40,12 +41,6 @@ const RARIMO_L2_CHAIN: Chain = {
       url: 'https://scan.rarimo.com',
     },
   },
-}
-
-export interface OnChainVerificationOptions {
-  contractAddress: `0x${string}`
-  receiverAddress: `0x${string}`
-  chain?: Chain
 }
 
 export async function buildOnChainProofParams({

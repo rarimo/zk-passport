@@ -1,72 +1,10 @@
-import {
-  CustomProofParams,
-  RequestVerificationLinkOpts,
-  ZkPassport,
-  ZkProof,
-} from '@rarimo/zk-passport'
+import { ZkPassport } from '@rarimo/zk-passport'
 import { QRCodeSVG } from 'qrcode.react'
-import { ComponentProps, FC, HTMLAttributes, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { isAndroid, isIos } from './device'
-import { buildOnChainProofParams, OnChainVerificationOptions } from './on-chain-proof-params'
-
-export enum ProofRequestStatuses {
-  /**
-   * The proof request params have been requested
-   */
-  RequestInitiated = 'request_initiated',
-  /**
-   * The user can scan the QR code to generate the proof
-   */
-  VerificationRequested = 'verification_requested',
-  /**
-   * The proof has been received and verified
-   */
-  Verified = 'verified',
-  /**
-   * An error occurred during the proof request process
-   */
-  Error = 'error',
-}
-
-export interface ZkPassportQrCodeProps extends Omit<HTMLAttributes<HTMLAnchorElement>, 'onError'> {
-  /**
-   * Verificator service API URL:
-   * https://github.com/rarimo/verificator-svc
-   * @default 'https://api.app.rarime.com'
-   */
-  apiUrl?: string
-  /**
-   * Unique User ID
-   */
-  requestId: string
-  /**
-   * Options for the proof request
-   */
-  verificationOptions: RequestVerificationLinkOpts | CustomProofParams | OnChainVerificationOptions
-  /**
-   * Polling interval for checking the proof status
-   * @default 5000
-   */
-  pollingInterval?: number
-  /**
-   * Props for the QR code component:
-   * https://github.com/zpao/qrcode.react?tab=readme-ov-file#available-props
-   */
-  qrProps: Omit<ComponentProps<typeof QRCodeSVG>, 'value'>
-  /**
-   * Callback for proof request status changes
-   */
-  onStatusChange: (status: ProofRequestStatuses) => void
-  /**
-   * Callback for successful proof generation and verification
-   */
-  onSuccess: (proof: ZkProof) => void
-  /**
-   * Callback for errors during the proof request process
-   */
-  onError: (error: Error) => void
-}
+import { buildOnChainProofParams } from './on-chain-proof-params'
+import { ProofRequestStatuses, ZkPassportQrCodeProps } from './types'
 
 const ZkPassportQrCode: FC<ZkPassportQrCodeProps> = ({
   apiUrl,
@@ -171,5 +109,4 @@ const ZkPassportQrCode: FC<ZkPassportQrCodeProps> = ({
   )
 }
 
-export { type OnChainVerificationOptions } from './on-chain-proof-params'
 export default ZkPassportQrCode

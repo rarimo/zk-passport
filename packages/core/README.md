@@ -79,3 +79,7 @@ const proof = await zkPassport.getVerifiedProof(id)
 | `expirationDateUpperBound`  | `string` | Upper bound for passport expiration (hex `yyMMdd`)             | **Optional** |
 | `timestampLowerBound`       | `string` | UNIX timestamp (seconds) — must be before registration         | **Optional** |
 | `timestampUpperBound`       | `string` | UNIX timestamp (seconds) — must be on/after registration       | **Optional** |
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE).
