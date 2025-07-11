@@ -1,5 +1,8 @@
 # Onchain Verification Example (React + TypeScript + Wagmi)
 
+## Live Demo
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/rarimo/zk-passport/tree/main/examples/onchain-verification-react)
+
 ## Installation
 
 Install dependencies from the `monorepo root`:

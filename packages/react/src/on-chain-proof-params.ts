@@ -48,20 +48,6 @@ export interface OnChainVerificationOptions {
   chain?: Chain
 }
 
-export const hexToAscii = (hex: string) => {
-  if (hex.startsWith('0x')) {
-    hex = hex.slice(2)
-  }
-
-  let str = ''
-  for (let i = 0; i < hex.length; i += 2) {
-    const chunk = hex.slice(i, i + 2)
-    str += String.fromCharCode(parseInt(chunk, 16))
-  }
-
-  return str.trim()
-}
-
 export async function buildOnChainProofParams({
   contractAddress,
   receiverAddress,
@@ -113,12 +99,12 @@ export async function buildOnChainProofParams({
       upper: hexToBigInt(result[17]).toString(),
     })
     .withBirthDateBounds({
-      lower: hexToAscii(trim(result[18])),
-      upper: hexToAscii(trim(result[19])),
+      lower: hexToString(trim(result[18])),
+      upper: hexToString(trim(result[19])),
     })
     .withExpirationDateBounds({
-      lower: hexToAscii(trim(result[20])),
-      upper: hexToAscii(trim(result[21])),
+      lower: hexToString(trim(result[20])),
+      upper: hexToString(trim(result[21])),
     })
 
   if (!isEmptyHex(result[6])) {

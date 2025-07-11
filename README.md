@@ -21,8 +21,24 @@ QR code React component for ZK Passport. It allows you to easily integrate ZK Pa
 
 The repository also includes two examples showcasing integration:
 
-- [`examples/onchain-verification-react`](./examples/onchain-verification-react) – full end-to-end flow including smart contract interaction and Reown App integration.
-- [`examples/offchain-verification-react`](./examples/offchain-verification-react) – client-side verification flow (no contract interaction).
+#### [Basic Verification React](./examples/basic-verification-react/README.md)
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/rarimo/zk-passport/tree/main/examples/basic-verification-react)
+
+High-level integration with basic verification flow.
+
+
+#### [Advanced Verification React](./examples/advanced-verification-react/README.md)
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/rarimo/zk-passport/tree/main/examples/advanced-verification-react)
+
+Low-level integration with advanced verification flow using `CustomProofParamsBuilder`.
+
+#### [Onchain Verification React](./examples/onchain-verification-react/README.md)
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/rarimo/zk-passport/tree/main/examples/onchain-verification-react)
+
+Onchain verification flow using Wagmi and Viem.
 
 ## License
 
