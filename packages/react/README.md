@@ -89,8 +89,8 @@ import { mainnet } from 'viem/chains'
 
 const requestId = 'account-1'
 const apiUrl = 'https://api.app.rarime.com'
-const contractAddress = '<your_contract_address>'
-const receiverAddress = '<your_receiver_address>'
+const contractAddress = '<your_contract_address>' // Verification contract: https://docs.rarimo.com/zk-passport/guide-on-chain-verification/
+const receiverAddress = '<your_receiver_address>' // e.g. user's wallet address
 const chain = mainnet
 
 return (

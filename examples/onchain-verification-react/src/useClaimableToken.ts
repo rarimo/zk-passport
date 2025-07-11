@@ -1,7 +1,7 @@
 import { ZkProof } from '@rarimo/zk-passport'
 import { useAppKitAccount } from '@reown/appkit/react'
 import { estimateGas, getBalance, getPublicClient, waitForTransactionReceipt } from '@wagmi/core'
-import { encodeAbiParameters, encodeFunctionData, parseAbiParameters, toHex } from 'viem'
+import { Address, encodeAbiParameters, encodeFunctionData, parseAbiParameters, toHex } from 'viem'
 import { useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
 
 import { CLAIMABLE_TOKEN_ABI } from './ClaimableTokenAbi'
@@ -15,7 +15,7 @@ export default function useClaimableToken() {
     abi: CLAIMABLE_TOKEN_ABI,
     address: config.CONTRACT_ADDRESS,
     functionName: 'isClaimedByAddress',
-    args: [address as `0x${string}`],
+    args: [address as Address],
     query: {
       initialData: false,
     },
@@ -48,10 +48,10 @@ export default function useClaimableToken() {
         estimateGas(wagmiAdapter.wagmiConfig, {
           to: config.CONTRACT_ADDRESS,
           data: encodedData,
-          account: address as `0x${string}`,
+          account: address as Address,
         }),
         getPublicClient(wagmiAdapter.wagmiConfig)?.estimateFeesPerGas(),
-        getBalance(wagmiAdapter.wagmiConfig, { address: address as `0x${string}` }),
+        getBalance(wagmiAdapter.wagmiConfig, { address: address as Address }),
       ])
 
       const estimatedCost = gasLimit * (gasFees?.maxFeePerGas || 0n)
@@ -120,7 +120,7 @@ function buildClaimArguments(proof: ZkProof, address: string) {
       toHex(root, { size: 32 }),
       currentDate,
       encodeAbiParameters(parseAbiParameters('address, (uint256, uint256)'), [
-        address as `0x${string}`,
+        address as Address,
         [nullifier, identityCreationTimestamp],
       ]),
       { a, b, c },

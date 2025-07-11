@@ -1,7 +1,9 @@
+import { Address } from 'viem'
+
 export type Config = {
   API_URL: string
   REOWN_ID: string
-  CONTRACT_ADDRESS: `0x${string}`
+  CONTRACT_ADDRESS: Address
 }
 
 export const config: Config = {

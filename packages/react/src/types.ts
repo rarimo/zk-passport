@@ -5,7 +5,7 @@ import {
 } from '@rarimo/zk-passport'
 import { type QRCodeSVG } from 'qrcode.react'
 import { type ComponentProps, type HTMLAttributes } from 'react'
-import { type Chain } from 'viem'
+import { type Address, type Chain } from 'viem'
 
 export enum ProofRequestStatuses {
   /**
@@ -32,12 +32,12 @@ export interface OnChainVerificationOptions {
    * @example '0x1234567890abcdef1234567890abcdef12345678'
    * @see {@link https://docs.rarimo.com/zk-passport/guide-on-chain-verification/ On-chain verification guide}
    */
-  contractAddress: `0x${string}`
+  contractAddress: Address
   /**
    * that will be used in the proof `eventId`
    * @example '0xabcdefabcdefabcdefabcdefabcdefabcdef'
    */
-  receiverAddress: `0x${string}`
+  receiverAddress: Address
   /**
    * The `viem` network to use for the receiving public signals
    * @default "Rarimo L2"

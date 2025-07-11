@@ -94,7 +94,7 @@ export default function App() {
               ) : (
                 <ZkPassportQrCode
                   apiUrl={config.API_URL}
-                  requestId={address ?? 'unknown-account'}
+                  requestId={address}
                   verificationOptions={{
                     contractAddress: config.CONTRACT_ADDRESS,
                     receiverAddress: address as `0x${string}`,
