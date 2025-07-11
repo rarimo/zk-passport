@@ -11,8 +11,10 @@ QR code React component for ZK Passport. It allows you to easily integrate ZK Pa
 
 ## Installation
 
+To use the ZK Passport React component, you need to install the `@rarimo/zk-passport-react` package along with the `viem` library for onchain verification support.
+
 ```bash
-yarn add @rarimo/zk-passport-react
+yarn add viem@^2.31.0 @rarimo/zk-passport-react
 ```
 
 ## Usage
