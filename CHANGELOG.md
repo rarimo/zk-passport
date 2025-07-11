@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
+### Added
+- `react` - Support for **Onchain Verification** with `OnChainVerificationOptions`
+- `examples` - `StackBlitz` live demos for all examples
+- `examples` - New example `advanced-verification-react`
+
+### Changed
+- Use workspace packages in examples instead of local paths
+- Update `yarn` to `4.9.2`
+- `examples` - Rename `offchain-verification-react` to `basic-verification-react`
+- `examples` - Update `onchain-verification-react` to use `OnChainVerificationOptions`
 
 ## [1.0.0] - 2025-07-01
 ### Added
