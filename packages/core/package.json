@@ -19,17 +19,18 @@
     "@distributedlab/jac": "^1.0.0-rc.17"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.62",
-    "@swc/core": "^1.12.7",
+    "@swc/cli": "^0.7.8",
+    "@swc/core": "^1.12.11",
     "@swc/jest": "^0.2.38",
     "@types/jest": "^30.0.0",
     "@types/node": "^18.14.2",
     "jest": "^30.0.3",
     "ts-jest": "^29.4.0",
-    "tsc-alias": "^1.8.2"
+    "tsc-alias": "^1.8.2",
+    "typescript": "^5.8.2"
   },
   "publishConfig": {
     "access": "public"
   },
-  "packageManager": "yarn@4.7.0"
+  "packageManager": "yarn@4.9.2"
 }

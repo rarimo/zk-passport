@@ -8,13 +8,12 @@
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
-    "types": ["@types/node"],
     "skipLibCheck": true,
     "noImplicitAny": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
 }

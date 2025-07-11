@@ -1,5 +1,5 @@
 {
-  "name": "zk-passport-example-app",
+  "name": "basic-verification-react",
   "type": "module",
   "private": true,
   "scripts": {
@@ -8,11 +8,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@rarimo/zk-passport": "file:../../packages/core",
-    "@rarimo/zk-passport-react": "file:../../packages/react",
+    "@rarimo/zk-passport-react": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwindcss": "^4.0.17"
+    "tailwindcss": "^4.0.17",
+    "viem": "^2"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.17",
@@ -22,8 +22,5 @@
     "typescript": "^5.8.2",
     "vite": "^6.2.3"
   },
-  "packageManager": "yarn@4.7.0",
-  "resolutions": {
-    "@rarimo/zk-passport": "file:../../packages/core"
-  }
+  "packageManager": "yarn@4.9.2"
 }

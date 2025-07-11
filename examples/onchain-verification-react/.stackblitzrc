@@ -1,0 +1,4 @@
+{
+  "installDependencies": false,
+  "startCommand": "cp .env-example .env && pnpm dlx replace-in-file '/workspace:\\^/g' 'latest' package.json --quiet && pnpm install && pnpm start"
+}
